@@ -1,16 +1,36 @@
+import Chatbox from '@components/Chatbox/Chatbox'
+import Header from '@components/Header/Header'
+import { useChat } from '@hooks/useChat'
+
 export const enum AppTestIds {
   Container = 'app-container',
 }
 
 function App() {
+  const { conversation, setNewMessage, loading } = useChat()
+  function handleSendButtonClick() {
+    const messageInput = document.getElementById(
+      'messageInput',
+    ) as HTMLInputElement
+    const message = messageInput.value
+    if (!message) return
+    setNewMessage(message)
+    messageInput.value = ''
+  }
+
   return (
-    <div
-      data-testid={AppTestIds.Container}
-      className="w-screen h-screen flex justify-center items-center bg-slate-900"
-    >
-      <h1 className="text-xl font-bold h-fit text-green-400 transition ease-in-out hover:drop-shadow-[0_0_5px_rgba(74,222,128,1)] ">
-        Vite + React + Typescript + Eslint + Vitest + Tailwind + Husky
-      </h1>
+    <div data-testid={AppTestIds.Container} className="w-100">
+      <Header />
+      <div className="flex h-100">
+        {conversation && <Chatbox messages={conversation.messages} />}
+        <input id="messageInput" type="text" className="border" />
+        <button
+          className={`border ${loading ? 'anumate-spin' : ''}`}
+          onClick={handleSendButtonClick}
+        >
+          Send
+        </button>
+      </div>
     </div>
   )
 }
