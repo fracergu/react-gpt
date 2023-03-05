@@ -20,7 +20,8 @@
     "paths": {
       "@components/*": ["src/components/*"],
       "@hooks/*": ["src/hooks/*"],
-      "@models/*": ["src/models/*"]
+      "@models/*": ["src/models/*"],
+      "@redux/*": ["src/redux/*"]
     }
   },
   "include": ["src"],

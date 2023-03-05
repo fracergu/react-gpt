@@ -1,4 +1,4 @@
-export type Conversation = {
+export type Chat = {
   id: string
   messages: Message[]
 }

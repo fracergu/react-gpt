@@ -1,5 +1,7 @@
 import { ApiResponse } from '@models/api-response.model'
-import { Conversation, Message, Role } from '@models/conversation.model'
+import { Chat, Message, Role } from '@models/chat.model'
+import { selectChats, selectCurrentChatId } from '@redux/chats/chatsSlice'
+import { useAppDispatch, useAppSelector } from '@redux/hooks'
 import { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 
@@ -8,12 +10,21 @@ const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY
 const OPENAI_CHAT_MODEL = 'gpt-3.5-turbo'
 
 export function useChat() {
-  const [loading, setLoading] = useState(false)
+  const dispatch = useAppDispatch()
+
+  const currentChatId = useAppSelector(selectCurrentChatId)
+  const chats = useAppSelector(selectChats)
+
+  const [loading, setLoading] = useState(true)
   const [newMessage, setNewMessage] = useState('')
-  const [conversation, setConversation] = useState<Conversation>({
-    id: uuid(),
-    messages: [],
-  })
+  const [conversation, setConversation] = useState<Chat>(
+    chats.find(chat => chat.id === currentChatId) || {
+      id: uuid(),
+      messages: [],
+    },
+  )
+
+  dispatch({ type: 'chats/setCurrentChatId', payload: conversation.id })
 
   useEffect(() => {
     if (!newMessage) return
@@ -35,12 +46,22 @@ export function useChat() {
     })
       .then(response => {
         response.json().then((data: ApiResponse) => {
+          const message = data.choices[0].message
+          console.log(message)
           setConversation({
             ...conversation,
             messages: [
               ...conversation.messages,
               { role: Role.USER, content: newMessage },
-              data.choices[0].message as Message,
+              message as Message,
+            ],
+          })
+          console.log(conversation)
+          dispatch({
+            type: 'chats/setChats',
+            payload: [
+              ...chats.filter(chat => chat.id !== conversation.id),
+              conversation,
             ],
           })
           setLoading(false)
@@ -52,5 +73,5 @@ export function useChat() {
       })
   }, [newMessage])
 
-  return { conversation, setNewMessage, loading }
+  return { setNewMessage, loading, conversation }
 }
