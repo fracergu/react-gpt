@@ -24,7 +24,6 @@ export const uiSlice = createSlice({
     },
   },
 })
-
 export const { setTheme } = uiSlice.actions
 
 export const selectTheme = (state: RootState) => state.ui.theme

@@ -1,8 +1,11 @@
 import Header from '@components/Header/Header'
 import { useLoadLocalStorage } from '@hooks/useLoadLocalStorage'
-import { ApiResponse } from '@models/api-response.model'
-import { Message, Role } from '@models/chat.model'
-import { selectChats, selectCurrentChatId } from '@redux/chats/chatsSlice'
+import { Role } from '@models/chat.model'
+import {
+  fetchResponse,
+  selectChats,
+  selectCurrentChatId,
+} from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
 
 export const enum AppTestIds {
@@ -41,7 +44,7 @@ function App() {
   const handleSendMessage = async () => {
     const input = document.getElementById('messageInput') as HTMLInputElement
     if (!input.value) return
-    dispatch({
+    await dispatch({
       type: 'chats/addMessage',
       payload: {
         role: Role.USER,
