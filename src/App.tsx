@@ -7,6 +7,7 @@ import {
   selectCurrentChatId,
 } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
+import { useEffect, useState } from 'react'
 
 export const enum AppTestIds {
   Container = 'app-container',
@@ -17,9 +18,16 @@ function App() {
 
   const dispatch = useAppDispatch()
 
-  const currentChatId = useAppSelector(selectCurrentChatId)
   const chats = useAppSelector(selectChats)
+  const currentChatId = useAppSelector(selectCurrentChatId)
   const currentChat = chats.find(chat => chat.id === currentChatId)
+
+  const [newMessage, setNewMessage] = useState('')
+
+  useEffect(() => {
+    if (!currentChat) return
+    dispatch(fetchResponse(currentChat.messages))
+  }, [newMessage])
 
   const handleCreateChat = () => {
     dispatch({
@@ -51,6 +59,7 @@ function App() {
         content: input.value,
       },
     })
+    setNewMessage(input.value)
     input.value = ''
   }
 

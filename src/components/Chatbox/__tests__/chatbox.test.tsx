@@ -1,4 +1,4 @@
-import { Role } from '@models/conversation.model'
+import { Role } from '@models/chat.model'
 import { render, screen } from '@testing-library/react'
 import Chatbox, { ChatboxTestIds } from '../Chatbox'
 

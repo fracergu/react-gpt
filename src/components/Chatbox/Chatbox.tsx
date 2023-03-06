@@ -1,4 +1,4 @@
-import { Message } from '@models/conversation.model'
+import { Message } from '@models/chat.model'
 
 export type ChatboxProps = {
   messages: Message[]

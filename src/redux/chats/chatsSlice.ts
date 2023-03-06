@@ -121,4 +121,12 @@ export const selectChats = (state: RootState) => state.chats.chats
 export const selectCurrentChatId = (state: RootState) =>
   state.chats.currentChatId
 
+export const selectSentNewMessages = (state: RootState) => {
+  const currentChat = state.chats.chats.find(
+    chat => chat.id === state.chats.currentChatId,
+  )
+  if (!currentChat) return []
+  return currentChat.messages.filter(message => message.role === Role.USER)
+}
+
 export default chatsSlice.reducer
