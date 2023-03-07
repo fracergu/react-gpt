@@ -1,9 +1,8 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '@redux/store'
-import { Chat, Message, Role } from '@models/chat.model'
+import { Chat, Message } from '@models/chat.model'
 import { v4 as uuid } from 'uuid'
-import { useAppDispatch } from '@redux/hooks'
-import { ApiResponse } from '@models/api-response.model'
+import { fetchResponse } from './chatsAsyncThunks'
 
 enum FetchStatus {
   IDLE = 'idle',
@@ -17,7 +16,7 @@ interface ChatsState {
   fetchStatus: FetchStatus
 }
 
-const initialState: ChatsState = {
+export const initialState: ChatsState = {
   chats: [],
   fetchStatus: FetchStatus.IDLE,
 }
@@ -30,7 +29,7 @@ export const chatsSlice = createSlice({
       state.chats = action.payload
       localStorage.setItem('chats', JSON.stringify(action.payload))
     },
-    createChat: (state, action: PayloadAction<void>) => {
+    createChat: state => {
       const newChatId = uuid()
       state.chats.push({
         id: newChatId,
@@ -55,7 +54,7 @@ export const chatsSlice = createSlice({
       currentChat.messages.push(action.payload)
       localStorage.setItem('chats', JSON.stringify(state.chats))
     },
-    fetchStarted: (state, action: PayloadAction<void>) => {
+    fetchStarted: state => {
       state.fetchStatus = FetchStatus.LOADING
     },
     fetchSuccess: (state, action: PayloadAction<Message>) => {
@@ -68,7 +67,7 @@ export const chatsSlice = createSlice({
       currentChat.messages.push(action.payload)
       localStorage.setItem('chats', JSON.stringify(state.chats))
     },
-    fetchFailed: (state, action: PayloadAction<void>) => {
+    fetchFailed: state => {
       state.fetchStatus = FetchStatus.FAILED
     },
   },
@@ -92,41 +91,8 @@ export const chatsSlice = createSlice({
   },
 })
 
-const API_URL = 'https://api.openai.com/v1/chat/completions'
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY
-const OPENAI_CHAT_MODEL = 'gpt-3.5-turbo'
-
-export const fetchResponse = createAsyncThunk(
-  'chats/fetchResponse',
-  async (messages: Message[]) => {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: OPENAI_CHAT_MODEL,
-        messages,
-      }),
-    })
-    const data: ApiResponse = await response.json()
-    return data.choices[0].message
-  },
-)
-
-export const { setChats } = chatsSlice.actions
-
 export const selectChats = (state: RootState) => state.chats.chats
 export const selectCurrentChatId = (state: RootState) =>
   state.chats.currentChatId
-
-export const selectSentNewMessages = (state: RootState) => {
-  const currentChat = state.chats.chats.find(
-    chat => chat.id === state.chats.currentChatId,
-  )
-  if (!currentChat) return []
-  return currentChat.messages.filter(message => message.role === Role.USER)
-}
 
 export default chatsSlice.reducer

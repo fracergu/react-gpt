@@ -10,7 +10,7 @@ interface UiState {
   theme: Theme
 }
 
-const initialState: UiState = {
+export const initialState: UiState = {
   theme: Theme.LIGHT,
 }
 
