@@ -21,7 +21,8 @@
       "@components/*": ["src/components/*"],
       "@hooks/*": ["src/hooks/*"],
       "@models/*": ["src/models/*"],
-      "@redux/*": ["src/redux/*"]
+      "@redux/*": ["src/redux/*"],
+      "@enums/*": ["src/enums/*"]
     }
   },
   "include": ["src"],

@@ -1,6 +1,12 @@
+import Loader from '@components/Loader/Loader'
+import { FetchStatus } from '@enums/fetchStatus.enum'
 import { Message, Role } from '@models/chat.model'
 import { fetchResponse } from '@redux/chats/chatsAsyncThunks'
-import { selectChats, selectCurrentChatId } from '@redux/chats/chatsSlice'
+import {
+  selectChats,
+  selectCurrentChatId,
+  selectFetchStatus,
+} from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
 import { useEffect, useState } from 'react'
 
@@ -17,6 +23,8 @@ const Chatbox = () => {
   const chats = useAppSelector(selectChats)
   const currentChat = chats.find(chat => chat.id === currentChatId)
   const dispatch = useAppDispatch()
+
+  const fetchStatus = useAppSelector(selectFetchStatus)
 
   const [newMessage, setNewMessage] = useState('')
 
@@ -101,10 +109,14 @@ const Chatbox = () => {
       )}
       {currentChat && (
         <div className="flex">
-          <input id="messageInput" type="text" className="border mr-2" />{' '}
-          <button className="border p-1" onClick={handleSendMessage}>
-            Send
-          </button>
+          <input id="messageInput" type="text" className="border mr-2" />
+          {fetchStatus === FetchStatus.LOADING && <Loader />}
+          {fetchStatus === FetchStatus.FAILED ||
+            (fetchStatus === FetchStatus.IDLE && (
+              <button className="border p-1" onClick={handleSendMessage}>
+                Send
+              </button>
+            ))}
         </div>
       )}
     </div>
