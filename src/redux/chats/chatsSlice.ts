@@ -3,12 +3,7 @@ import type { RootState } from '@redux/store'
 import { Chat, Message } from '@models/chat.model'
 import { v4 as uuid } from 'uuid'
 import { fetchResponse } from './chatsAsyncThunks'
-
-enum FetchStatus {
-  IDLE = 'idle',
-  LOADING = 'loading',
-  FAILED = 'failed',
-}
+import { FetchStatus } from '@enums/fetchStatus.enum'
 
 interface ChatsState {
   currentChatId?: string
@@ -94,5 +89,7 @@ export const chatsSlice = createSlice({
 export const selectChats = (state: RootState) => state.chats.chats
 export const selectCurrentChatId = (state: RootState) =>
   state.chats.currentChatId
+
+export const selectFetchStatus = (state: RootState) => state.chats.fetchStatus
 
 export default chatsSlice.reducer
