@@ -1,36 +1,30 @@
 import Chatbox from '@components/Chatbox/Chatbox'
 import Header from '@components/Header/Header'
-import { useChat } from '@hooks/useChat'
+import Sidenav from '@components/Sidenav/Sidenav'
+import { useLoadLocalStorage } from '@hooks/useLoadLocalStorage'
+import { selectChats } from '@redux/chats/chatsSlice'
+import { useAppSelector } from '@redux/hooks'
 
 export const enum AppTestIds {
   Container = 'app-container',
 }
 
 function App() {
-  const { conversation, setNewMessage, loading } = useChat()
-  function handleSendButtonClick() {
-    const messageInput = document.getElementById(
-      'messageInput',
-    ) as HTMLInputElement
-    const message = messageInput.value
-    if (!message) return
-    setNewMessage(message)
-    messageInput.value = ''
-  }
+  const localStorageLoaded = useLoadLocalStorage()
+
+  const chats = useAppSelector(selectChats)
 
   return (
-    <div data-testid={AppTestIds.Container} className="w-100">
+    <div data-testid={AppTestIds.Container} className="w-100 h-screen">
       <Header />
-      <div className="flex h-100">
-        {conversation && <Chatbox messages={conversation.messages} />}
-        <input id="messageInput" type="text" className="border" />
-        <button
-          className={`border ${loading ? 'anumate-spin' : ''}`}
-          onClick={handleSendButtonClick}
-        >
-          Send
-        </button>
-      </div>
+      {localStorageLoaded && (
+        <div className="flex flex-col h-100 justify-center align-center">
+          <div className="flex">
+            {!!chats.length && <Sidenav />}
+            {<Chatbox />}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
