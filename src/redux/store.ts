@@ -4,11 +4,9 @@ import {
   PreloadedState,
 } from '@reduxjs/toolkit'
 
-import uiReducer from '@redux/ui/uiSlice'
 import chatsReducer from '@redux/chats/chatsSlice'
 
 const rootReducer = combineReducers({
-  ui: uiReducer,
   chats: chatsReducer,
 })
 
@@ -21,7 +19,6 @@ export function setupStore(preloadedState?: PreloadedState<RootState>) {
 
 const store = configureStore({
   reducer: {
-    ui: uiReducer,
     chats: chatsReducer,
   },
 })
