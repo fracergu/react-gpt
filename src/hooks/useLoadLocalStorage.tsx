@@ -13,6 +13,13 @@ export function useLoadLocalStorage() {
         payload: JSON.parse(savedChats),
       })
     }
+    const theme = localStorage.getItem('theme')
+    if (theme) {
+      dispatch({
+        type: 'ui/setTheme',
+        payload: theme,
+      })
+    }
     setLoaded(true)
   }, [])
 

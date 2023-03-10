@@ -3,3 +3,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+/* Chrome, Safari y Opera */
+*::-webkit-scrollbar {
+  width: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+}
+
+/* Microsoft Edge e IE */
+* {
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
