@@ -15,16 +15,16 @@ function App() {
   const chats = useAppSelector(selectChats)
 
   return (
-    <div data-testid={AppTestIds.Container} className="w-100 h-screen">
+    <div data-testid={AppTestIds.Container} className="flex flex-col h-screen">
       <Header />
-      {localStorageLoaded && (
-        <div className="flex flex-col h-100 justify-center align-center">
-          <div className="flex">
-            {!!chats.length && <Sidenav />}
-            {<Chatbox />}
-          </div>
-        </div>
-      )}
+      <div className="flex-1 flex overflow-hidden">
+        <Sidenav />
+        <main className="flex-1 bg-white p-4 overflow-y-auto">
+          {localStorageLoaded && (
+            <div className="flex h-100">{<Chatbox />}</div>
+          )}
+        </main>
+      </div>
     </div>
   )
 }

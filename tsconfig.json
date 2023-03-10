@@ -19,6 +19,7 @@
     "jsx": "react-jsx",
     "paths": {
       "@components/*": ["src/components/*"],
+      "@assets/*": ["src/assets/*"],
       "@hooks/*": ["src/hooks/*"],
       "@models/*": ["src/models/*"],
       "@redux/*": ["src/redux/*"],
