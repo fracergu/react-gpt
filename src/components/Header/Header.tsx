@@ -15,7 +15,7 @@ const Header = () => {
   return (
     <nav
       data-testid={HeaderTestIds.Container}
-      className="p-4 flex justify-center font-open-sans border-b bg-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+      className="p-4 flex justify-center font-open-sans"
     >
       <h1 className="text-2xl ">React-GPT-Client</h1>
       <button

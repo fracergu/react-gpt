@@ -11,15 +11,14 @@ function App() {
   const localStorageLoaded = useLoadLocalStorage()
 
   return (
-    <div data-testid={AppTestIds.Container} className="flex flex-col h-screen">
+    <div
+      data-testid={AppTestIds.Container}
+      className="flex flex-col h-screen bg-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+    >
       <Header />
       <div className="flex-1 flex overflow-hidden">
         <Sidenav />
-        <main className="flex-1 bg-white p-4 overflow-y-auto">
-          {localStorageLoaded && (
-            <div className="flex h-100">{<Chatbox />}</div>
-          )}
-        </main>
+        {localStorageLoaded && <Chatbox />}
       </div>
     </div>
   )

@@ -8,7 +8,15 @@ import {
   selectFetchStatus,
 } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { useEffect, useState } from 'react'
+import { KeyboardEventHandler, useEffect, useRef, useState } from 'react'
+
+import personLight from '@assets/person-light.svg'
+import personDark from '@assets/person-dark.svg'
+import robotLight from '@assets/robot-light.svg'
+import robotDark from '@assets/robot-dark.svg'
+import sendLight from '@assets/send-light.svg'
+import sendDark from '@assets/send-dark.svg'
+import { selectTheme } from '@redux/ui/uiSlice'
 
 export type ChatboxProps = {
   messages: Message[]
@@ -24,14 +32,41 @@ const Chatbox = () => {
   const currentChat = chats.find(chat => chat.id === currentChatId)
   const dispatch = useAppDispatch()
 
+  const currentTheme = useAppSelector(selectTheme)
+
   const fetchStatus = useAppSelector(selectFetchStatus)
 
-  const [newMessage, setNewMessage] = useState('')
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
+
+  const [sendNewMessage, setSendNewMessage] = useState('')
+  const [textareaValue, setTextareaValue] = useState('')
+
+  const handleTextareaKeyDown: KeyboardEventHandler<
+    HTMLTextAreaElement
+  > = event => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault()
+      setSendNewMessage(textareaValue.trim())
+      setTextareaValue('')
+    }
+  }
+
+  const handleTextareaChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    setTextareaValue(event.target.value)
+  }
+
+  useEffect(() => {
+    if (fetchStatus === FetchStatus.LOADING) return
+    messagesContainerRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [fetchStatus, currentChat])
 
   useEffect(() => {
     if (!currentChat) return
     dispatch(fetchResponse(currentChat.messages))
-  }, [newMessage])
+    messagesContainerRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [sendNewMessage])
 
   const handleCreateChat = () => {
     dispatch({
@@ -40,83 +75,96 @@ const Chatbox = () => {
   }
 
   const handleSendMessage = async () => {
-    const input = document.getElementById('messageInput') as HTMLInputElement
-    if (!input.value) return
+    if (!textareaValue) return
     await dispatch({
       type: 'chats/addMessage',
       payload: {
         role: Role.USER,
-        content: input.value,
+        content: textareaValue,
       },
     })
-    setNewMessage(input.value)
-    input.value = ''
+    setSendNewMessage(textareaValue)
+    setTextareaValue('')
   }
 
   return (
     <div
-      className="flex flex-col w-4/5 h-100 items-center"
+      className="flex flex-col flex-1 w-4/5 h-100 items-center"
       data-testid={ChatboxTestIds.Container}
     >
-      {!currentChat && (
-        <div>
-          {chats.length > 0 && (
-            <h1 className="text-2xl">Select a chat to start or</h1>
+      {/* Header */}
+      <div className="flex p-3 w-full justify-center items-center border-b dark:border-gray-700 min-h-[4em] dark:bg-gray-700 bg-gray-100">
+        <span className="text-xl">
+          {currentChat ? (
+            <>Chat {currentChat?.id}</>
+          ) : (
+            <>
+              Select{' '}
+              <a
+                className="text-green-400 hover:cursor-pointer"
+                onClick={handleCreateChat}
+              >
+                or create
+              </a>{' '}
+              a chat to start
+            </>
           )}
-          <h2 className="text-xl">
-            <button className="text-blue-500" onClick={handleCreateChat}>
-              Create a new one
-            </button>
-          </h2>
+        </span>
+      </div>
+
+      {/* Conversation */}
+      {currentChat && (
+        <div className="flex flex-col w-full overflow-y-auto leading-8">
+          {currentChat.messages.map((message, idx) => (
+            <div
+              key={idx}
+              className="w-full even:bg-gray-100 dark:even:bg-gray-700 odd:bg-gray-200 dark:odd:bg-gray-800"
+            >
+              <div className="flex px-4 py-6 max-w-[90ch] my-0 mx-auto">
+                <img
+                  className="w-6 h-6 mr-6 mt-1"
+                  src={
+                    message.role === Role.USER
+                      ? currentTheme === 'light'
+                        ? personLight
+                        : personDark
+                      : currentTheme === 'light'
+                      ? robotLight
+                      : robotDark
+                  }
+                  alt="user"
+                />
+                <div>{message.content}</div>
+              </div>
+            </div>
+          ))}
+          <div ref={messagesContainerRef}></div>
         </div>
       )}
+      {/* Input */}
       {currentChat && (
-        <div>
-          <h1>Chat {currentChat.id}</h1>
-          <div className="flex flex-col">
-            {currentChat.messages.map((message, idx) => {
-              switch (message.role) {
-                case Role.USER:
-                  return (
-                    <div
-                      key={idx}
-                      className="w-full border-b border-black/10 dark:border-gray-900/50 text-gray-800 dark:text-gray-100 group dark:bg-gray-800"
-                    >
-                      <div className="text-base gap-4 md:gap-6 m-auto md:max-w-2xl lg:max-w-2xl xl:max-w-3xl p-4 md:py-6 flex lg:px-0">
-                        <div className="relative flex w-[calc(100%-50px)] flex-col gap-1 md:gap-3 lg:w-[calc(100%-115px)]">
-                          {message.content}
-                        </div>
-                      </div>
-                    </div>
-                  )
-                case Role.ASSISTANT:
-                  return (
-                    <div
-                      key={idx}
-                      className="w-full border-b border-black/10 dark:border-gray-900/50 text-gray-800 dark:text-gray-100 group bg-gray-50 dark:bg-[#444654]"
-                    >
-                      <div className="text-base gap-4 md:gap-6 m-auto md:max-w-2xl lg:max-w-2xl xl:max-w-3xl p-4 md:py-6 flex lg:px-0">
-                        <div className="flex flex-grow flex-col gap-3">
-                          {message.content}
-                        </div>
-                      </div>
-                    </div>
-                  )
-              }
-            })}
+        <div className="flex px-4 py-6 w-full justify-center">
+          <div className="flex gap-4 w-[90ch]">
+            <textarea
+              id="messageInput"
+              className="resize-none w-full focus:outline-none p-2 bg-gray-100 dark:bg-gray-700 dark:text-gray-200"
+              placeholder="Type your message here..."
+              value={textareaValue}
+              onChange={handleTextareaChange}
+              onKeyDown={handleTextareaKeyDown}
+            />
+            {fetchStatus === FetchStatus.LOADING && <Loader />}
+            {fetchStatus === FetchStatus.FAILED ||
+              (fetchStatus === FetchStatus.IDLE && (
+                <button className="p-1" onClick={handleSendMessage}>
+                  <img
+                    className="w-10 h-10"
+                    src={currentTheme === 'light' ? sendLight : sendDark}
+                    alt="send"
+                  />
+                </button>
+              ))}
           </div>
-        </div>
-      )}
-      {currentChat && (
-        <div className="flex">
-          <input id="messageInput" type="text" className="border mr-2" />
-          {fetchStatus === FetchStatus.LOADING && <Loader />}
-          {fetchStatus === FetchStatus.FAILED ||
-            (fetchStatus === FetchStatus.IDLE && (
-              <button className="border p-1" onClick={handleSendMessage}>
-                Send
-              </button>
-            ))}
         </div>
       )}
     </div>

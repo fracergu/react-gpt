@@ -43,10 +43,10 @@ const Sidenav = () => {
   return (
     <div
       data-testid={SidenavTestIds.Container}
-      className="flex flex-col w-1/5 border-r h-100 dark:bg-gray-700 bg-gray-100 dark:border-gray-700 dark:text-gray-200"
+      className="flex flex-col w-1/5 border-r border-gray-300 h-100 dark:bg-gray-700 bg-gray-100 dark:border-gray-700 dark:text-gray-200"
       style={{ resize: 'horizontal' }}
     >
-      <div className="flex p-3 justify-between items-center border-b dark:border-gray-700">
+      <div className="flex p-3 justify-between items-center border-b border-gray-300 dark:border-gray-700 min-h-[4em]">
         <span className="text-xl">Chats</span>
         <button
           onClick={handleCreateChat}
