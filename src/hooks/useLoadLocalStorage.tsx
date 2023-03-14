@@ -1,3 +1,4 @@
+import { Theme } from '@enums/theme.enum'
 import { useAppDispatch } from '@redux/hooks'
 import { useEffect, useState } from 'react'
 
@@ -14,14 +15,11 @@ export function useLoadLocalStorage() {
       })
     }
     const theme = localStorage.getItem('theme')
-    if (theme) {
-      dispatch({
-        type: 'ui/setTheme',
-        payload: theme,
-      })
-    }
+    dispatch({
+      type: 'ui/setTheme',
+      payload: theme ? (theme as Theme) : Theme.DARK,
+    })
     setLoaded(true)
   }, [])
-
   return loaded
 }
