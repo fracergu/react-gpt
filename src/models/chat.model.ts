@@ -1,6 +1,7 @@
 export type Chat = {
   id: string
   messages: Message[]
+  incomingMessage?: Message
 }
 
 export type Message = {
