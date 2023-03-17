@@ -29,6 +29,7 @@ const Chatbox = () => {
   const currentChatId = useAppSelector(selectCurrentChatId)
   const chats = useAppSelector(selectChats)
   const currentChat = chats.find(chat => chat.id === currentChatId)
+  const chatIncomingMessage = currentChat?.incomingMessage
   const dispatch = useAppDispatch()
 
   const currentTheme = useAppSelector(selectTheme)
@@ -58,6 +59,9 @@ const Chatbox = () => {
             {currentChat.messages.map((message, idx) => (
               <Message message={message} idx={idx} key={idx} />
             ))}
+            {chatIncomingMessage && (
+              <Message message={chatIncomingMessage} idx={-1} />
+            )}
             <div ref={messagesContainerRef}></div>
           </div>
           <ChatInput />

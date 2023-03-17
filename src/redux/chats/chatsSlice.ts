@@ -2,13 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '@redux/store'
 import { Chat, Message } from '@models/chat.model'
 import { v4 as uuid } from 'uuid'
-import { fetchResponse } from './chatsAsyncThunks'
 import { FetchStatus } from '@enums/fetchStatus.enum'
 
 interface ChatsState {
   currentChatId?: string
   chats: Chat[]
   fetchStatus: FetchStatus
+  incomingMessage?: Message
 }
 
 export const initialState: ChatsState = {
@@ -49,40 +49,17 @@ export const chatsSlice = createSlice({
       currentChat.messages.push(action.payload)
       localStorage.setItem('chats', JSON.stringify(state.chats))
     },
-    fetchStarted: state => {
-      state.fetchStatus = FetchStatus.LOADING
+    updateFetchStatus: (state, action: PayloadAction<FetchStatus>) => {
+      state.fetchStatus = action.payload
     },
-    fetchSuccess: (state, action: PayloadAction<Message>) => {
-      state.fetchStatus = FetchStatus.IDLE
+    updateChatIncomingMessage: (state, action: PayloadAction<Message>) => {
       if (!state.currentChatId) return
       const currentChat = state.chats.find(
         chat => chat.id === state.currentChatId,
       )
       if (!currentChat) return
-      currentChat.messages.push(action.payload)
-      localStorage.setItem('chats', JSON.stringify(state.chats))
+      currentChat.incomingMessage = action.payload
     },
-    fetchFailed: state => {
-      state.fetchStatus = FetchStatus.FAILED
-    },
-  },
-  extraReducers: builder => {
-    builder.addCase(fetchResponse.pending, (state, action) => {
-      state.fetchStatus = FetchStatus.LOADING
-    })
-    builder.addCase(fetchResponse.fulfilled, (state, action) => {
-      state.fetchStatus = FetchStatus.IDLE
-      if (!state.currentChatId) return
-      const currentChat = state.chats.find(
-        chat => chat.id === state.currentChatId,
-      )
-      if (!currentChat) return
-      currentChat.messages.push(action.payload as Message)
-      localStorage.setItem('chats', JSON.stringify(state.chats))
-    })
-    builder.addCase(fetchResponse.rejected, (state, action) => {
-      state.fetchStatus = FetchStatus.FAILED
-    })
   },
 })
 

@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 import sendLight from '@assets/send-light.svg'
 import sendDark from '@assets/send-dark.svg'
 import { Role } from '@models/chat.model'
-import { fetchResponse } from '@redux/chats/chatsAsyncThunks'
+import { useStreamCompletion } from '@hooks/useStreamCompletion'
 
 export enum ChatInputTestIds {
   Container = 'chat-input-container',
@@ -31,12 +31,7 @@ const ChatInput = () => {
   const fetchStatus = useAppSelector(selectFetchStatus)
 
   const [textareaValue, setTextareaValue] = useState('')
-  const [sendNewMessage, setSendNewMessage] = useState('')
-
-  useEffect(() => {
-    if (!currentChat || !sendNewMessage) return
-    dispatch(fetchResponse(currentChat.messages))
-  }, [sendNewMessage])
+  const { partialText, fullText, setInputMessages } = useStreamCompletion()
 
   const handleTextareaChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
@@ -53,17 +48,52 @@ const ChatInput = () => {
     }
   }
 
-  const handleSendMessage = async () => {
-    if (!textareaValue) return
+  useEffect(() => {
+    if (!partialText) return
+    dispatch({
+      type: 'chats/updateChatIncomingMessage',
+      payload: {
+        role: Role.ASSISTANT,
+        content: partialText,
+      },
+    })
+  }, [partialText])
+
+  useEffect(() => {
+    if (!fullText) return
+    dispatch({
+      type: 'chats/updateChatIncomingMessage',
+      payload: null,
+    })
     dispatch({
       type: 'chats/addMessage',
       payload: {
-        role: Role.USER,
-        content: textareaValue,
+        role: Role.ASSISTANT,
+        content: fullText,
       },
     })
-    setSendNewMessage(textareaValue)
+    dispatch({
+      type: 'chats/updateFetchStatus',
+      payload: FetchStatus.IDLE,
+    })
+  }, [fullText])
+
+  const handleSendMessage = () => {
+    if (!textareaValue || !currentChat) return
+    const newMessage = {
+      role: Role.USER,
+      content: textareaValue,
+    }
+    dispatch({
+      type: 'chats/addMessage',
+      payload: newMessage,
+    })
+    dispatch({
+      type: 'chats/updateFetchStatus',
+      payload: FetchStatus.LOADING,
+    })
     setTextareaValue('')
+    setInputMessages([...currentChat.messages, newMessage])
   }
 
   return (
