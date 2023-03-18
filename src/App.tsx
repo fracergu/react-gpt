@@ -13,7 +13,7 @@ function App() {
   return (
     <div
       data-testid={AppTestIds.Container}
-      className="flex flex-col h-screen bg-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+      className="flex flex-col h-screen bg-zinc-900  text-gray-200"
     >
       <Header />
       <div className="flex-1 flex overflow-hidden">

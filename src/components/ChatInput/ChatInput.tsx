@@ -6,10 +6,8 @@ import {
   selectFetchStatus,
 } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { selectTheme } from '@redux/ui/uiSlice'
 import { useEffect, useState } from 'react'
-import sendLight from '@assets/send-light.svg'
-import sendDark from '@assets/send-dark.svg'
+import sendIcon from '@assets/send.svg'
 import { Role } from '@models/chat.model'
 import { useStreamCompletion } from '@hooks/useStreamCompletion'
 
@@ -27,7 +25,6 @@ const ChatInput = () => {
 
   const currentChat = chats.find(chat => chat.id === currentChatId)
 
-  const currentTheme = useAppSelector(selectTheme)
   const fetchStatus = useAppSelector(selectFetchStatus)
 
   const [textareaValue, setTextareaValue] = useState('')
@@ -99,13 +96,13 @@ const ChatInput = () => {
   return (
     <div
       data-testid={ChatInputTestIds.Container}
-      className="flex px-4 py-6 w-full justify-center"
+      className="relative mt-auto flex px-4 py-6 w-full justify-center bg-zinc-800"
     >
       <div className="flex gap-4 w-[90ch]">
         <textarea
           data-testid={ChatInputTestIds.Textarea}
           id="messageInput"
-          className="resize-none w-full focus:outline-none p-2 bg-gray-100 dark:bg-gray-700 dark:text-gray-200"
+          className="resize-none w-full focus:outline-none p-2  bg-zinc-700 text-gray-200 rounded-md"
           placeholder="Type your message here..."
           value={textareaValue}
           onChange={handleTextareaChange}
@@ -119,11 +116,7 @@ const ChatInput = () => {
               className="p-1"
               onClick={handleSendMessage}
             >
-              <img
-                className="w-10 h-10"
-                src={currentTheme === 'light' ? sendLight : sendDark}
-                alt="send"
-              />
+              <img className="w-10 h-10" src={sendIcon} alt="send" />
             </button>
           ))}
       </div>

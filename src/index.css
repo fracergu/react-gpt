@@ -6,20 +6,36 @@
 
 /* Firefox */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: #ccc transparent;
+  scrollbar-width: thin !important;
+  scrollbar-color: #ccc transparent !important;
 }
 
 /* Chrome, Safari y Opera */
 *::-webkit-scrollbar {
-  width: 4px;
+  width: 4px !important;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #ccc;
+  background-color: #ccc !important;
 }
 
 /* Microsoft Edge e IE */
 * {
-  -ms-overflow-style: -ms-autohiding-scrollbar;
+  -ms-overflow-style: -ms-autohiding-scrollbar !important;
 }
+
+/* Scrollbar for horizontal divs */
+
+::-webkit-scrollbar {
+  height: 6px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc !important;
+}
+
+/* End Scrollbar for horizontal divs */

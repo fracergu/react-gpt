@@ -5,11 +5,9 @@ import {
 } from '@reduxjs/toolkit'
 
 import chatsReducer from '@redux/chats/chatsSlice'
-import uiReducer from '@redux/ui/uiSlice'
 
 const rootReducer = combineReducers({
   chats: chatsReducer,
-  ui: uiReducer,
 })
 
 export function setupStore(preloadedState?: PreloadedState<RootState>) {
@@ -22,7 +20,6 @@ export function setupStore(preloadedState?: PreloadedState<RootState>) {
 const store = configureStore({
   reducer: {
     chats: chatsReducer,
-    ui: uiReducer,
   },
 })
 

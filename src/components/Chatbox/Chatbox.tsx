@@ -1,11 +1,6 @@
-import { FetchStatus } from '@enums/fetchStatus.enum'
 import { Message as MessageModel } from '@models/chat.model'
-import {
-  selectChats,
-  selectCurrentChatId,
-  selectFetchStatus,
-} from '@redux/chats/chatsSlice'
-import { useAppDispatch, useAppSelector } from '@redux/hooks'
+import { selectChats, selectCurrentChatId } from '@redux/chats/chatsSlice'
+import { useAppSelector } from '@redux/hooks'
 import { useEffect, useRef } from 'react'
 
 import ChatInput from '@components/ChatInput/ChatInput'
