@@ -37,10 +37,10 @@ const Sidenav = () => {
   return (
     <div
       data-testid={SidenavTestIds.Container}
-      className="flex flex-col w-1/5 border-r border-gray-300 h-100 bg-gray-700 border-gray-700 text-gray-200"
+      className="flex flex-col w-1/5 border-gray-300 h-100 bg-blue-700 b text-gray-200"
       style={{ resize: 'horizontal' }}
     >
-      <div className="flex p-3 justify-between items-center border-b border-gray-700 min-h-[4em]">
+      <div className="flex p-3 justify-between items-center min-h-[4em]">
         <span className="text-xl">Chats</span>
         <button
           onClick={handleCreateChat}
@@ -53,13 +53,12 @@ const Sidenav = () => {
         {chats.map(chat => (
           <div
             key={chat.id}
-            className={`flex justify-between items-center even:bg-gray-700 odd:bg-gray-800 ${
-              chat.id === currentChat?.id ? 'text-green-400' : ''
+            className={`flex justify-between items-center bg-${
+              chat.id === currentChat?.id ? 'zinc-900' : 'blue-700'
             }`}
           >
             <button
-              style={{ maxWidth: '100%' }}
-              className="text-ellipsis overflow-hidden whitespace-nowrap w-100 p-3 pr-0"
+              className="text-ellipsis overflow-hidden whitespace-nowrap max-w-[75%] p-3 pr-0"
               onClick={() => handleLoadChat(chat.id)}
             >
               {chat.id}

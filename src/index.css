@@ -23,3 +23,19 @@
 * {
   -ms-overflow-style: -ms-autohiding-scrollbar !important;
 }
+
+/* Scrollbar for horizontal divs */
+
+::-webkit-scrollbar {
+  height: 6px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc !important;
+}
+
+/* End Scrollbar for horizontal divs */

@@ -23,7 +23,7 @@ const ChatboxHeader = ({ currentChatId }: ChatboxHeaderProps) => {
     <>
       Select{' '}
       <a
-        className="text-green-400 hover:cursor-pointer"
+        className="hover:cursor-pointer underline underline-offset-4"
         onClick={handleCreateChat}
       >
         or create
@@ -35,7 +35,7 @@ const ChatboxHeader = ({ currentChatId }: ChatboxHeaderProps) => {
   return (
     <div
       data-testid={ChatboxHeaderTestIds.Container}
-      className="flex p-3 w-full justify-center items-center border-b border-gray-700 min-h-[4em] bg-gray-700 "
+      className="flex p-3 w-full justify-center items-center  min-h-[4em] bg-blue-700"
     >
       <span className="text-xl">{content}</span>
     </div>
