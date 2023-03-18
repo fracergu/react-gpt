@@ -12,15 +12,14 @@ const decodeResponse = (response?: Uint8Array) => {
     return ''
   }
 
-  const pattern = /"content"\s*:\s*"([^"]*)"/g
+  const pattern = /"delta":\s*({.*?"content":\s*".*?"})/g
   const decodedText = utf8Decoder.decode(response)
   const matches: string[] = []
 
   let match
   while ((match = pattern.exec(decodedText)) !== null) {
-    matches.push(match[1])
+    matches.push(JSON.parse(match[1]).content)
   }
-
   return matches.join('')
 }
 
