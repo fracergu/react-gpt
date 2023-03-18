@@ -35,7 +35,7 @@ const ChatboxHeader = ({ currentChatId }: ChatboxHeaderProps) => {
   return (
     <div
       data-testid={ChatboxHeaderTestIds.Container}
-      className="flex p-3 w-full justify-center items-center border-b dark:border-gray-700 min-h-[4em] dark:bg-gray-700 bg-gray-100"
+      className="flex p-3 w-full justify-center items-center border-b border-gray-700 min-h-[4em] bg-gray-700 "
     >
       <span className="text-xl">{content}</span>
     </div>
