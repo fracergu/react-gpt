@@ -6,6 +6,7 @@ import personLight from '@assets/person-light.svg'
 import personDark from '@assets/person-dark.svg'
 import robotLight from '@assets/robot-light.svg'
 import robotDark from '@assets/robot-dark.svg'
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 
 export enum MessageTestIds {
   Container = 'message-container',
@@ -39,7 +40,9 @@ const Message = ({ message, idx }: MessageProps) => {
           }
           alt="user"
         />
-        <div>{message.content}</div>
+        <div>
+          <ReactMarkdown>{message.content}</ReactMarkdown>
+        </div>
       </div>
     </div>
   )

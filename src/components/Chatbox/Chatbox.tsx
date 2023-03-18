@@ -1,5 +1,5 @@
 import { FetchStatus } from '@enums/fetchStatus.enum'
-import { Message as MessageModel, Role } from '@models/chat.model'
+import { Message as MessageModel } from '@models/chat.model'
 import {
   selectChats,
   selectCurrentChatId,
@@ -8,11 +8,6 @@ import {
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
 import { useEffect, useRef } from 'react'
 
-import personLight from '@assets/person-light.svg'
-import personDark from '@assets/person-dark.svg'
-import robotLight from '@assets/robot-light.svg'
-import robotDark from '@assets/robot-dark.svg'
-import { selectTheme } from '@redux/ui/uiSlice'
 import ChatInput from '@components/ChatInput/ChatInput'
 import Message from '@components/Message/Message'
 import ChatboxHeader from '@components/ChatboxHeader/ChatboxHeader'
@@ -30,22 +25,12 @@ const Chatbox = () => {
   const chats = useAppSelector(selectChats)
   const currentChat = chats.find(chat => chat.id === currentChatId)
   const chatIncomingMessage = currentChat?.incomingMessage
-  const dispatch = useAppDispatch()
 
-  const currentTheme = useAppSelector(selectTheme)
-  const fetchStatus = useAppSelector(selectFetchStatus)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (fetchStatus === FetchStatus.LOADING) return
-    messagesContainerRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [fetchStatus, currentChat])
-
-  const handleCreateChat = () => {
-    dispatch({
-      type: 'chats/createChat',
-    })
-  }
+    messagesContainerRef.current?.scrollIntoView()
+  }, [currentChat])
 
   return (
     <div
