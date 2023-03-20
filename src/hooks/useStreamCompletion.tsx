@@ -1,4 +1,6 @@
-import { Message } from '@models/chat.model'
+import { FetchStatus } from '@enums/fetchStatus.enum'
+import { Message, Role } from '@models/chat.model'
+import { useAppDispatch } from '@redux/hooks'
 import { useState, useEffect } from 'react'
 
 const API_URL = 'https://api.openai.com/v1/chat/completions'
@@ -24,8 +26,7 @@ const decodeResponse = (response?: Uint8Array) => {
 }
 
 export const useStreamCompletion = () => {
-  const [partialText, setPartialText] = useState('')
-  const [fullText, setFullText] = useState('')
+  const dispatch = useAppDispatch()
   const [inputMessages, setInputMessages] = useState<Message[]>([])
   const abortController = new AbortController()
 
@@ -33,10 +34,21 @@ export const useStreamCompletion = () => {
     if (!inputMessages.length) return
 
     const onText = (text: string) => {
-      setPartialText(text)
+      dispatch({
+        type: 'chats/updateChatIncomingMessage',
+        payload: {
+          role: Role.ASSISTANT,
+          content: text,
+        },
+      })
     }
 
     const fetchData = async () => {
+      dispatch({
+        type: 'chats/updateFetchStatus',
+        payload: FetchStatus.LOADING,
+      })
+
       try {
         const response = await fetch(API_URL, {
           method: 'POST',
@@ -77,9 +89,31 @@ export const useStreamCompletion = () => {
           await read()
         }
         await read()
-        setFullText(fullText)
-      } catch (error) {
-        console.error(error)
+
+        dispatch({
+          type: 'chats/updateFetchStatus',
+          payload: FetchStatus.IDLE,
+        })
+        dispatch({
+          type: 'chats/updateChatIncomingMessage',
+          payload: null,
+        })
+        dispatch({
+          type: 'chats/addMessage',
+          payload: {
+            role: Role.ASSISTANT,
+            content: fullText,
+          },
+        })
+      } catch (error: any) {
+        dispatch({
+          type: 'chats/updateChatFetchError',
+          payload: 'Error fetching',
+        })
+        abortController.abort()
+        return () => {
+          abortController.abort()
+        }
       }
     }
     fetchData()
@@ -88,5 +122,5 @@ export const useStreamCompletion = () => {
     }
   }, [inputMessages])
 
-  return { partialText, fullText, setInputMessages }
+  return { setInputMessages }
 }
