@@ -60,6 +60,15 @@ export const chatsSlice = createSlice({
       if (!currentChat) return
       currentChat.incomingMessage = action.payload
     },
+    updateChatFetchError: (state, action: PayloadAction<string>) => {
+      if (!state.currentChatId) return
+      const currentChat = state.chats.find(
+        chat => chat.id === state.currentChatId,
+      )
+      if (!currentChat) return
+      state.fetchStatus = FetchStatus.FAILED
+      currentChat.fetchError = action.payload
+    },
   },
 })
 
@@ -70,7 +79,6 @@ export const selectCurrentChat = (state: RootState) => {
   if (!state.chats.currentChatId) return
   return state.chats.chats.find(chat => chat.id === state.chats.currentChatId)
 }
-
 export const selectFetchStatus = (state: RootState) => state.chats.fetchStatus
 
 export default chatsSlice.reducer

@@ -2,10 +2,9 @@ import Loader from '@components/Loader/Loader'
 import { FetchStatus } from '@enums/fetchStatus.enum'
 import { selectCurrentChat, selectFetchStatus } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import sendIcon from '@assets/send.svg'
-import { Role } from '@models/chat.model'
-import { useStreamCompletion } from '@hooks/useStreamCompletion'
+import { Message, Role } from '@models/chat.model'
 
 export enum ChatInputTestIds {
   Container = 'chat-input-container',
@@ -13,14 +12,17 @@ export enum ChatInputTestIds {
   SendButton = 'chat-input-send-button',
 }
 
-const ChatInput = () => {
+type chatInputProps = {
+  setInputMessages: (messages: Message[]) => void
+}
+
+const ChatInput = ({ setInputMessages }: chatInputProps) => {
   const dispatch = useAppDispatch()
 
   const currentChat = useAppSelector(selectCurrentChat)
   const fetchStatus = useAppSelector(selectFetchStatus)
 
   const [textareaValue, setTextareaValue] = useState('')
-  const { partialText, fullText, setInputMessages } = useStreamCompletion()
 
   const handleTextareaChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
@@ -37,36 +39,6 @@ const ChatInput = () => {
     }
   }
 
-  useEffect(() => {
-    if (!partialText) return
-    dispatch({
-      type: 'chats/updateChatIncomingMessage',
-      payload: {
-        role: Role.ASSISTANT,
-        content: partialText,
-      },
-    })
-  }, [partialText])
-
-  useEffect(() => {
-    if (!fullText) return
-    dispatch({
-      type: 'chats/updateChatIncomingMessage',
-      payload: null,
-    })
-    dispatch({
-      type: 'chats/addMessage',
-      payload: {
-        role: Role.ASSISTANT,
-        content: fullText,
-      },
-    })
-    dispatch({
-      type: 'chats/updateFetchStatus',
-      payload: FetchStatus.IDLE,
-    })
-  }, [fullText])
-
   const handleSendMessage = () => {
     if (!textareaValue || !currentChat) return
     const newMessage = {
@@ -77,10 +49,7 @@ const ChatInput = () => {
       type: 'chats/addMessage',
       payload: newMessage,
     })
-    dispatch({
-      type: 'chats/updateFetchStatus',
-      payload: FetchStatus.LOADING,
-    })
+
     setTextareaValue('')
     setInputMessages([...currentChat.messages, newMessage])
   }
@@ -101,16 +70,15 @@ const ChatInput = () => {
           onKeyDown={handleTextareaKeyDown}
         />
         {fetchStatus === FetchStatus.LOADING && <Loader />}
-        {fetchStatus === FetchStatus.FAILED ||
-          (fetchStatus === FetchStatus.IDLE && (
-            <button
-              data-testid={ChatInputTestIds.SendButton}
-              className="p-1"
-              onClick={handleSendMessage}
-            >
-              <img className="w-10 h-10" src={sendIcon} alt="send" />
-            </button>
-          ))}
+        {fetchStatus !== FetchStatus.LOADING && (
+          <button
+            data-testid={ChatInputTestIds.SendButton}
+            className="p-1"
+            onClick={handleSendMessage}
+          >
+            <img className="w-10 h-10" src={sendIcon} alt="send" />
+          </button>
+        )}
       </div>
     </div>
   )

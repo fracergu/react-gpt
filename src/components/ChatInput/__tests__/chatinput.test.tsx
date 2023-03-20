@@ -4,7 +4,7 @@ import ChatInput, { ChatInputTestIds } from '../ChatInput'
 
 describe('ChatInput', () => {
   it('renders the chat input', () => {
-    renderWithProviders(<ChatInput />)
+    renderWithProviders(<ChatInput setInputMessages={() => {}} />)
     expect(screen.getByTestId(ChatInputTestIds.Container)).toBeInTheDocument()
     expect(screen.getByTestId(ChatInputTestIds.Textarea)).toBeInTheDocument()
     expect(screen.getByTestId(ChatInputTestIds.SendButton)).toBeInTheDocument()
