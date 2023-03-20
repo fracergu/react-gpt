@@ -66,6 +66,10 @@ export const chatsSlice = createSlice({
 export const selectChats = (state: RootState) => state.chats.chats
 export const selectCurrentChatId = (state: RootState) =>
   state.chats.currentChatId
+export const selectCurrentChat = (state: RootState) => {
+  if (!state.chats.currentChatId) return
+  return state.chats.chats.find(chat => chat.id === state.chats.currentChatId)
+}
 
 export const selectFetchStatus = (state: RootState) => state.chats.fetchStatus
 

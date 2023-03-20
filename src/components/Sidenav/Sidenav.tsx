@@ -1,17 +1,22 @@
-import { selectChats, selectCurrentChatId } from '@redux/chats/chatsSlice'
+import {
+  selectChats,
+  selectCurrentChat,
+  selectFetchStatus,
+} from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
 
 import binIcon from '@assets/bin.svg'
 import plusIcon from '@assets/plus.svg'
+import { FetchStatus } from '@enums/fetchStatus.enum'
 
 export enum SidenavTestIds {
   Container = 'sidenav-container',
 }
 
 const Sidenav = () => {
-  const currentChatId = useAppSelector(selectCurrentChatId)
   const chats = useAppSelector(selectChats)
-  const currentChat = chats.find(chat => chat.id === currentChatId)
+  const currentChat = useAppSelector(selectCurrentChat)
+  const fetchStatus = useAppSelector(selectFetchStatus)
   const dispatch = useAppDispatch()
 
   const handleDeleteChat = (chatId: string) => {
@@ -60,6 +65,7 @@ const Sidenav = () => {
             <button
               className="text-ellipsis overflow-hidden whitespace-nowrap max-w-[75%] p-3 pr-0"
               onClick={() => handleLoadChat(chat.id)}
+              disabled={fetchStatus === FetchStatus.LOADING}
             >
               {chat.id}
             </button>

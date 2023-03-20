@@ -1,5 +1,5 @@
 import { Message as MessageModel } from '@models/chat.model'
-import { selectChats, selectCurrentChatId } from '@redux/chats/chatsSlice'
+import { selectCurrentChat } from '@redux/chats/chatsSlice'
 import { useAppSelector } from '@redux/hooks'
 import { useEffect, useRef } from 'react'
 
@@ -16,11 +16,8 @@ export enum ChatboxTestIds {
 }
 
 const Chatbox = () => {
-  const currentChatId = useAppSelector(selectCurrentChatId)
-  const chats = useAppSelector(selectChats)
-  const currentChat = chats.find(chat => chat.id === currentChatId)
+  const currentChat = useAppSelector(selectCurrentChat)
   const chatIncomingMessage = currentChat?.incomingMessage
-
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -32,7 +29,7 @@ const Chatbox = () => {
       className="flex flex-col flex-1 w-4/5 h-100 items-center"
       data-testid={ChatboxTestIds.Container}
     >
-      <ChatboxHeader currentChatId={currentChatId} />
+      <ChatboxHeader currentChatId={currentChat?.id} />
       {currentChat && (
         <>
           <div className="flex flex-col w-full overflow-y-auto leading-8">
