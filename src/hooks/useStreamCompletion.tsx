@@ -74,20 +74,15 @@ export const useStreamCompletion = () => {
             fullText += delta
             onText(fullText.trim())
           }
-
           await read()
         }
-
         await read()
-
         setFullText(fullText)
       } catch (error) {
         console.error(error)
       }
     }
-
     fetchData()
-
     return () => {
       abortController.abort()
     }

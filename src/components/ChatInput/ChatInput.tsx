@@ -1,10 +1,6 @@
 import Loader from '@components/Loader/Loader'
 import { FetchStatus } from '@enums/fetchStatus.enum'
-import {
-  selectChats,
-  selectCurrentChatId,
-  selectFetchStatus,
-} from '@redux/chats/chatsSlice'
+import { selectCurrentChat, selectFetchStatus } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
 import { useEffect, useState } from 'react'
 import sendIcon from '@assets/send.svg'
@@ -20,11 +16,7 @@ export enum ChatInputTestIds {
 const ChatInput = () => {
   const dispatch = useAppDispatch()
 
-  const chats = useAppSelector(selectChats)
-  const currentChatId = useAppSelector(selectCurrentChatId)
-
-  const currentChat = chats.find(chat => chat.id === currentChatId)
-
+  const currentChat = useAppSelector(selectCurrentChat)
   const fetchStatus = useAppSelector(selectFetchStatus)
 
   const [textareaValue, setTextareaValue] = useState('')
