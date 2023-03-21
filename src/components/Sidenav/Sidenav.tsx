@@ -55,22 +55,22 @@ const Sidenav = () => {
         </button>
       </div>
       <div className="overflow-y-auto">
-        {chats.map(chat => (
+        {Object.keys(chats).map(chatId => (
           <div
-            key={chat.id}
+            key={chatId}
             className={`flex justify-between items-center bg-${
-              chat.id === currentChat?.id ? 'zinc-900' : 'blue-700'
+              chatId === currentChat?.id ? 'zinc-900' : 'blue-700'
             }`}
           >
             <button
               className="text-ellipsis overflow-hidden whitespace-nowrap max-w-[75%] p-3 pr-0"
-              onClick={() => handleLoadChat(chat.id)}
+              onClick={() => handleLoadChat(chatId)}
               disabled={fetchStatus === FetchStatus.LOADING}
             >
-              {chat.id}
+              {chatId}
             </button>
             <button
-              onClick={() => handleDeleteChat(chat.id)}
+              onClick={() => handleDeleteChat(chatId)}
               className="m-3"
               style={{ width: '30px', height: '30px', background: 'none' }}
             >

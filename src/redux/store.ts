@@ -23,6 +23,11 @@ const store = configureStore({
   },
 })
 
+store.subscribe(() => {
+  const state = store.getState().chats
+  localStorage.setItem('chats', JSON.stringify(state.chats))
+})
+
 export type RootState = ReturnType<typeof store.getState>
 export type AppStore = ReturnType<typeof setupStore>
 export type AppDispatch = AppStore['dispatch']
