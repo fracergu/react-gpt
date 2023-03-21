@@ -1,6 +1,7 @@
 import { FetchStatus } from '@enums/fetchStatus.enum'
 import { Message, Role } from '@models/chat.model'
-import { useAppDispatch } from '@redux/hooks'
+import { selectCurrentChatId } from '@redux/chats/chatsSlice'
+import { useAppDispatch, useAppSelector } from '@redux/hooks'
 import { useState, useEffect } from 'react'
 
 const API_URL = 'https://api.openai.com/v1/chat/completions'
@@ -27,20 +28,35 @@ const decodeResponse = (response?: Uint8Array) => {
 
 export const useStreamCompletion = () => {
   const dispatch = useAppDispatch()
+  const currentChatId = useAppSelector(selectCurrentChatId)
   const [inputMessages, setInputMessages] = useState<Message[]>([])
   const abortController = new AbortController()
 
   useEffect(() => {
     if (!inputMessages.length) return
 
-    const onText = (text: string) => {
+    const onText = (text: string, isDone = false) => {
+      const message = {
+        role: Role.ASSISTANT,
+        content: text,
+      }
       dispatch({
         type: 'chats/updateChatIncomingMessage',
-        payload: {
-          role: Role.ASSISTANT,
-          content: text,
-        },
+        payload: { chatId: currentChatId, message: isDone ? null : message },
       })
+      if (isDone) {
+        dispatch({
+          type: 'chats/updateFetchStatus',
+          payload: FetchStatus.IDLE,
+        })
+        dispatch({
+          type: 'chats/addMessage',
+          payload: {
+            chatId: currentChatId,
+            message,
+          },
+        })
+      }
     }
 
     const fetchData = async () => {
@@ -78,7 +94,7 @@ export const useStreamCompletion = () => {
         async function read() {
           const { value, done } = await reader.read()
 
-          if (done) return onText(fullText)
+          if (done) return onText(fullText, true)
 
           const delta = decodeResponse(value)
 
@@ -90,25 +106,18 @@ export const useStreamCompletion = () => {
         }
         await read()
 
-        dispatch({
-          type: 'chats/updateFetchStatus',
-          payload: FetchStatus.IDLE,
-        })
-        dispatch({
-          type: 'chats/updateChatIncomingMessage',
-          payload: null,
-        })
-        dispatch({
-          type: 'chats/addMessage',
-          payload: {
-            role: Role.ASSISTANT,
-            content: fullText,
-          },
-        })
+        const message = {
+          role: Role.ASSISTANT,
+          content: fullText,
+        }
       } catch (error: any) {
+        console.log(error)
         dispatch({
           type: 'chats/updateChatFetchError',
-          payload: 'Error fetching',
+          payload: {
+            chatId: currentChatId,
+            error: error.message,
+          },
         })
         abortController.abort()
         return () => {

@@ -47,7 +47,7 @@ const ChatInput = ({ setInputMessages }: chatInputProps) => {
     }
     dispatch({
       type: 'chats/addMessage',
-      payload: newMessage,
+      payload: { chatId: currentChat.id, message: newMessage },
     })
 
     setTextareaValue('')

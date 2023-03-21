@@ -1,3 +1,7 @@
+export type Chats = {
+  [id: string]: Chat
+}
+
 export type Chat = {
   id: string
   messages: Message[]
