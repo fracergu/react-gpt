@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '@redux/hooks'
 import binIcon from '@assets/bin.svg'
 import plusIcon from '@assets/plus.svg'
 import { FetchStatus } from '@enums/fetchStatus.enum'
+import { selectIsMobile, selectSidebarOpen } from '@redux/ui/uiSlice'
 
 export enum SidenavTestIds {
   Container = 'sidenav-container',
@@ -17,7 +18,10 @@ const Sidenav = () => {
   const chats = useAppSelector(selectChats)
   const currentChat = useAppSelector(selectCurrentChat)
   const fetchStatus = useAppSelector(selectFetchStatus)
+  const isMobile = useAppSelector(selectIsMobile)
   const dispatch = useAppDispatch()
+
+  const sidebarOpen = useAppSelector(selectSidebarOpen)
 
   const handleDeleteChat = (chatId: string) => {
     dispatch({
@@ -30,6 +34,12 @@ const Sidenav = () => {
     dispatch({
       type: 'chats/createChat',
     })
+    if (isMobile) {
+      dispatch({
+        type: 'ui/setSidebarOpen',
+        payload: false,
+      })
+    }
   }
 
   const handleLoadChat = (chatId: string) => {
@@ -37,45 +47,55 @@ const Sidenav = () => {
       type: 'chats/loadChat',
       payload: chatId,
     })
+    if (isMobile) {
+      dispatch({
+        type: 'ui/setSidebarOpen',
+        payload: false,
+      })
+    }
   }
 
   return (
     <div
       data-testid={SidenavTestIds.Container}
-      className="flex flex-col w-1/5 border-gray-300 h-100 bg-blue-700 b text-gray-200"
-      style={{ resize: 'horizontal' }}
+      className={`flex flex-col min-w-[250px] w-[250px] border-gray-300 h-full bg-blue-800 text-gray-100 z-10 absolute md:relative ${
+        sidebarOpen ? 'block' : 'hidden'
+      }`}
     >
-      <div className="flex p-3 justify-between items-center min-h-[4em]">
-        <span className="text-xl">Chats</span>
-        <button
-          onClick={handleCreateChat}
-          style={{ width: '30px', height: '30px', background: 'none' }}
-        >
-          <img src={plusIcon} />
-        </button>
-      </div>
-      <div className="overflow-y-auto">
+      <button
+        onClick={handleCreateChat}
+        className="flex p-3 items-center justify-between w-full hover:bg-blue-700 transition-colors duration-3"
+      >
+        <span className="text-sm">Create new chat</span>
+        <img src={plusIcon} className="w-6 h-6" />
+      </button>
+      <div className="overflow-y-auto text-sm">
         {Object.keys(chats).map(chatId => (
           <div
             key={chatId}
-            className={`flex justify-between items-center bg-${
-              chatId === currentChat?.id ? 'zinc-900' : 'blue-700'
-            }`}
+            className={`flex justify-between items-center 
+            ${
+              chatId === currentChat?.id
+                ? 'bg-blue-700'
+                : 'bg-blue-800 hover:bg-blue-700 hover:shadow'
+            }
+            transition-colors duration-3 `}
           >
-            <button
-              className="text-ellipsis overflow-hidden whitespace-nowrap max-w-[75%] p-3 pr-0"
-              onClick={() => handleLoadChat(chatId)}
-              disabled={fetchStatus === FetchStatus.LOADING}
-            >
-              {chatId}
-            </button>
-            <button
-              onClick={() => handleDeleteChat(chatId)}
-              className="m-3"
-              style={{ width: '30px', height: '30px', background: 'none' }}
-            >
-              <img src={binIcon} />
-            </button>
+            <div className="flex justify-between items-center p-3 w-full">
+              <button
+                className="flex text-ellipsis overflow-hidden whitespace-nowrap max-w-[75%]"
+                onClick={() => handleLoadChat(chatId)}
+                disabled={fetchStatus === FetchStatus.LOADING}
+              >
+                {new Date(chats[chatId].createdAt).toLocaleString()}
+              </button>
+              <button
+                onClick={() => handleDeleteChat(chatId)}
+                className="w-6 h-6"
+              >
+                <img src={binIcon} />
+              </button>
+            </div>
           </div>
         ))}
       </div>

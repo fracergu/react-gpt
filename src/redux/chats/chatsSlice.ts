@@ -30,6 +30,7 @@ export const chatsSlice = createSlice({
       const newChat: Chat = {
         id: uuid(),
         messages: [],
+        createdAt: Date.now(),
       }
       state.chats[newChat.id] = newChat
       state.currentChatId = newChat.id

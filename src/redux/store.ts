@@ -5,9 +5,18 @@ import {
 } from '@reduxjs/toolkit'
 
 import chatsReducer from '@redux/chats/chatsSlice'
+import uiReducer from '@redux/ui/uiSlice'
 
 const rootReducer = combineReducers({
   chats: chatsReducer,
+  ui: uiReducer,
+})
+
+const store = configureStore({
+  reducer: {
+    chats: chatsReducer,
+    ui: uiReducer,
+  },
 })
 
 export function setupStore(preloadedState?: PreloadedState<RootState>) {
@@ -17,15 +26,10 @@ export function setupStore(preloadedState?: PreloadedState<RootState>) {
   })
 }
 
-const store = configureStore({
-  reducer: {
-    chats: chatsReducer,
-  },
-})
-
 store.subscribe(() => {
-  const state = store.getState().chats
-  localStorage.setItem('chats', JSON.stringify(state.chats))
+  const { chats: chatsState, ui: uiState } = store.getState()
+  localStorage.setItem('chats', JSON.stringify(chatsState.chats))
+  localStorage.setItem('ui', JSON.stringify(uiState))
 })
 
 export type RootState = ReturnType<typeof store.getState>

@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
-import SyntaxHighlighter from 'react-syntax-highlighter'
-import { irBlack } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
 
 import { Role, Message as MessageModel } from '@models/chat.model'
 
 import personIcon from '@assets/person.svg'
 import robotIcon from '@assets/robot.svg'
-import copyIcon from '@assets/copy.svg'
-import copyGreenIcon from '@assets/copy-green.svg'
 import CodeBlock from '@components/CodeBlock/CodeBlock'
+import { useAppSelector } from '@redux/hooks'
+import { selectIsMobile } from '@redux/ui/uiSlice'
 
 export enum MessageTestIds {
   Container = 'message-container',
@@ -36,15 +33,15 @@ const Message = ({ message, idx }: MessageProps) => {
     <div
       data-testid={MessageTestIds.Container}
       key={idx}
-      className="w-full even:bg-zinc-800 odd:bg-zinc-900"
+      className="relative w-full even:bg-zinc-800 odd:bg-zinc-900 "
     >
-      <div className="flex px-4 py-6 max-w-[90ch] my-0 mx-auto">
+      <div className="flex px-4 py-6 w-full md:max-w-[90ch] my-0 mx-auto relative">
         <img
-          className="w-6 h-6 mr-6 mt-1"
+          className="w-20 h-20 md:w-6 md:h-6 opacity-5 md:opacity-100 md:mr-6 md:mt-1 top-[20px] md:top-0 absolute md:relative "
           src={message.role === Role.USER ? personIcon : robotIcon}
           alt="user"
         />
-        <div className="w-[calc(100%-50px)]">
+        <div className="w-full pt-5 md:pt-0 md:w-[calc(100%-50px)]">
           <ReactMarkdown
             children={message.content}
             components={{

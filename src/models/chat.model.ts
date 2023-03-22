@@ -5,6 +5,7 @@ export type Chats = {
 export type Chat = {
   id: string
   messages: Message[]
+  createdAt: number
   incomingMessage?: Message
   fetchError?: string
 }
