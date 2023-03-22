@@ -59,11 +59,11 @@ const ChatInput = ({ setInputMessages }: chatInputProps) => {
       data-testid={ChatInputTestIds.Container}
       className="relative mt-auto flex px-4 py-6 w-full justify-center bg-zinc-800"
     >
-      <div className="flex gap-4 w-[90ch]">
+      <div className="flex gap-4 w-full max-w-[90ch]">
         <textarea
           data-testid={ChatInputTestIds.Textarea}
           id="messageInput"
-          className="resize-none w-full focus:outline-none p-2  bg-zinc-700 text-gray-200 rounded-md"
+          className="resize-none w-full focus:outline-none p-2 bg-zinc-700 text-gray-100 rounded-md"
           placeholder="Type your message here..."
           value={textareaValue}
           onChange={handleTextareaChange}

@@ -5,7 +5,6 @@ import { useEffect, useRef } from 'react'
 
 import ChatInput from '@components/ChatInput/ChatInput'
 import Message from '@components/Message/Message'
-import ChatboxHeader from '@components/ChatboxHeader/ChatboxHeader'
 import { useStreamCompletion } from '@hooks/useStreamCompletion'
 import RegenerateResponse from '../RegenerateResponse/RegenerateResponse'
 
@@ -30,10 +29,9 @@ const Chatbox = () => {
 
   return (
     <div
-      className="flex flex-col flex-1 w-4/5 h-100 items-center"
+      className="flex flex-col w-full flex-1 items-center"
       data-testid={ChatboxTestIds.Container}
     >
-      <ChatboxHeader currentChatId={currentChat?.id} />
       {currentChat && (
         <>
           <div className="flex flex-col w-full overflow-y-auto leading-8">

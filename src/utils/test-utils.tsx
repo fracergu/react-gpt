@@ -8,6 +8,7 @@ import { AppStore, RootState, setupStore } from '@redux/store'
 // As a basic setup, import your same slice reducers
 
 import { initialState as initialChatsState } from '@redux/chats/chatsSlice'
+import { initialState as initialUiState } from '@redux/ui/uiSlice'
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
@@ -19,7 +20,7 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
 export function renderWithProviders(
   ui: React.ReactElement,
   {
-    preloadedState = { chats: initialChatsState },
+    preloadedState = { chats: initialChatsState, ui: initialUiState },
     // Automatically create a store instance if no store was passed in
     store = setupStore(preloadedState),
     ...renderOptions
