@@ -17,6 +17,7 @@ const decodeResponse = (response?: Uint8Array) => {
 
   const pattern = /"delta":\s*({.*?"content":\s*".*?"})/g
   const decodedText = utf8Decoder.decode(response)
+  console.log(decodedText)
   const matches: string[] = []
 
   let match
@@ -105,11 +106,6 @@ export const useStreamCompletion = () => {
           await read()
         }
         await read()
-
-        const message = {
-          role: Role.ASSISTANT,
-          content: fullText,
-        }
       } catch (error: any) {
         console.log(error)
         dispatch({
