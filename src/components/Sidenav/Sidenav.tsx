@@ -10,6 +10,8 @@ import plusIcon from '@assets/plus.svg'
 import { FetchStatus } from '@enums/fetchStatus.enum'
 import { selectSidebarOpen } from '@redux/ui/uiSlice'
 
+import Swal from 'sweetalert2'
+
 export enum SidenavTestIds {
   Container = 'sidenav-container',
 }
@@ -45,6 +47,22 @@ const Sidenav = () => {
     dispatch({
       type: 'ui/setSidebarOpen',
       payload: false,
+    })
+  }
+
+  const handleWipeButtonClick = () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Your chats and API key (if set) will be deleted.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#1d4ed8',
+      cancelButtonColor: '#b91c1c',
+    }).then(result => {
+      if (result.isConfirmed) {
+        localStorage.clear()
+        window.location.reload()
+      }
     })
   }
 
@@ -92,6 +110,9 @@ const Sidenav = () => {
               </div>
             </div>
           ))}
+        </div>
+        <div className="p-3 mt-auto items-center w-full">
+          <button onClick={handleWipeButtonClick}>Wipe all data</button>
         </div>
       </div>
       {sidebarOpen && (

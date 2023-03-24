@@ -2,6 +2,7 @@ import { FetchStatus } from '@enums/fetchStatus.enum'
 import { Message, Role } from '@models/chat.model'
 import { selectCurrentChatId } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
+import { selectApiKey } from '@redux/ui/uiSlice'
 import { useState, useEffect } from 'react'
 
 const API_URL = 'https://api.openai.com/v1/chat/completions'
@@ -28,6 +29,7 @@ const decodeResponse = (response?: Uint8Array) => {
 }
 
 export const useStreamCompletion = () => {
+  const apiKey = OPENAI_API_KEY || useAppSelector(selectApiKey)
   const dispatch = useAppDispatch()
   const currentChatId = useAppSelector(selectCurrentChatId)
   const [inputMessages, setInputMessages] = useState<Message[]>([])
@@ -70,7 +72,7 @@ export const useStreamCompletion = () => {
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${OPENAI_API_KEY}`,
+            Authorization: `Bearer ${apiKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
