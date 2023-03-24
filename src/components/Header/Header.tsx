@@ -50,7 +50,7 @@ const Header = () => {
           <img src={infoIcon} alt="info" className="w-6 h-6 md:w-8 md:h-8" />
         </button>
         <a
-          href="https://github.com/fracergu/react-gpt-client"
+          href="https://github.com/fracergu/react-gpt"
           rel="noreferrer"
           target="_blank"
         >
