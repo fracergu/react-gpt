@@ -27,7 +27,7 @@ const Chatbox = () => {
     if (currentChat) {
       messagesContainerRef.current?.scrollIntoView()
     }
-  }, [currentChat?.messages])
+  }, [currentChat?.messages, chatIncomingMessage])
 
   return (
     <div
