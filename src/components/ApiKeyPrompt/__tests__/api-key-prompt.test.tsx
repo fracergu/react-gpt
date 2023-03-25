@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import ApiKeyPrompt from '../ApiKeyPrompt'
 
 describe('ApiKeyPrompt', () => {
@@ -14,7 +14,7 @@ describe('ApiKeyPrompt', () => {
   it('renders ApiKeyPrompt component', () => {
     render(<ApiKeyPrompt updateApiKey={mockUpdateApiKey} />)
     const apiKeyPromptContainer = screen.getByTestId('api-key-prompt-container')
-    expect(apiKeyPromptContainer).toBeInTheDocument()
+    expect(apiKeyPromptContainer).toBeTruthy()
   })
 
   it('updates apiKey state when input changes', () => {

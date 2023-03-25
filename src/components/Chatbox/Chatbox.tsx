@@ -24,8 +24,10 @@ const Chatbox = () => {
   const { setInputMessages } = useStreamCompletion()
 
   useEffect(() => {
-    messagesContainerRef.current?.scrollIntoView()
-  }, [currentChat])
+    if (currentChat) {
+      messagesContainerRef.current?.scrollIntoView()
+    }
+  }, [currentChat?.messages])
 
   return (
     <div
