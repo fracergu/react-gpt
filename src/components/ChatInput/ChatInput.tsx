@@ -3,7 +3,7 @@ import { FetchStatus } from '@enums/fetchStatus.enum'
 import { selectCurrentChat, selectFetchStatus } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
 import { useCallback, useState } from 'react'
-import sendIcon from '@assets/send.svg'
+import sendIcon from '@assets/icons/send.svg'
 import { Message, Role } from '@models/chat.model'
 
 type chatInputProps = {

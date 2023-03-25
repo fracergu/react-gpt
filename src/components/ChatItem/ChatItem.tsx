@@ -1,4 +1,4 @@
-import binIcon from '@assets/bin.svg'
+import binIcon from '@assets/icons/bin.svg'
 
 export type ChatItemProps = {
   chatId: string

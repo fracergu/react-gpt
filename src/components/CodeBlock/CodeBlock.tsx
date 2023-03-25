@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { irBlack } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
-import copyIcon from '@assets/copy.svg'
+import copyIcon from '@assets/icons/copy.svg'
 
 export type CodeBlockProps = {
   inline?: boolean

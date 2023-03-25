@@ -1,7 +1,7 @@
 import { selectChats, selectCurrentChat } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
 
-import plusIcon from '@assets/plus.svg'
+import plusIcon from '@assets/icons/plus.svg'
 import { selectSidebarOpen } from '@redux/ui/uiSlice'
 
 import { deleteChat, createChat, loadChat } from '@redux/chats/chatsActions'

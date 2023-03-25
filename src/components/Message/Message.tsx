@@ -2,8 +2,8 @@ import ReactMarkdown from 'react-markdown'
 
 import { Role, Message as MessageModel } from '@models/chat.model'
 
-import personIcon from '@assets/person.svg'
-import robotIcon from '@assets/robot.svg'
+import personIcon from '@assets/icons/person.svg'
+import robotIcon from '@assets/icons/robot.svg'
 import CodeBlock from '@components/CodeBlock/CodeBlock'
 
 export enum MessageTestIds {

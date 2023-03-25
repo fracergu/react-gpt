@@ -1,7 +1,7 @@
-import robotIcon from '@assets/robot.svg'
-import githubIcon from '@assets/github.svg'
-import hamburgerIcon from '@assets/hamburger.svg'
-import infoIcon from '@assets/info.svg'
+import robotIcon from '@assets/icons/robot.svg'
+import githubIcon from '@assets/icons/github.svg'
+import hamburgerIcon from '@assets/icons/hamburger.svg'
+import infoIcon from '@assets/icons/info.svg'
 import Swal from 'sweetalert2'
 import { useAppDispatch } from '@redux/hooks'
 
