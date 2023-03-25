@@ -21,12 +21,15 @@ const ApiKeyPrompt = ({ updateApiKey }: ApiKeyPromptProps) => {
   }
 
   const handleApiKeyInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const key = e.target.value
     setInputTouched(true)
-    setApiKey(e.target.value)
-    if (e.target.value.length > 0) {
-      setIsApiKeyValid(checkApiKeyValidity(e.target.value))
-    } else {
-      setIsApiKeyValid(false)
+    setApiKey(key)
+    setIsApiKeyValid(checkApiKeyValidity(key))
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && isApiKeyValid) {
+      handleSetApiKeyButtonClick()
     }
   }
 
@@ -35,6 +38,8 @@ const ApiKeyPrompt = ({ updateApiKey }: ApiKeyPromptProps) => {
     const validPrefix = key.startsWith('sk-')
     return validLength && validPrefix
   }
+
+  const isSetButtonEnabled = isApiKeyValid && inputTouched
 
   return (
     <div
@@ -67,7 +72,7 @@ const ApiKeyPrompt = ({ updateApiKey }: ApiKeyPromptProps) => {
           <button
             className="bg-blue-800 text-white rounded-md p-2 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleSetApiKeyButtonClick}
-            disabled={!isApiKeyValid && inputTouched}
+            disabled={!isSetButtonEnabled}
           >
             Set API key
           </button>
