@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 
 import { Role, Message as MessageModel } from '@models/chat.model'
@@ -17,27 +16,16 @@ export type MessageProps = {
 }
 
 const Message = ({ message, idx }: MessageProps) => {
-  const [copied, setCopied] = useState(false)
-
-  useEffect(() => {
-    if (copied) {
-      setTimeout(() => {
-        setCopied(false)
-      }, 2500)
-    }
-  }, [copied])
-
   return (
     <div
       data-testid={MessageTestIds.Container}
-      key={idx}
       className="relative w-full even:bg-zinc-800 odd:bg-zinc-900 "
     >
       <div className="flex px-4 py-6 w-full md:max-w-[90ch] my-0 mx-auto relative">
         <img
           className="w-6 h-6 md:mr-6 md:mt-1 top-[15px] md:top-0 absolute md:relative "
           src={message.role === Role.USER ? personIcon : robotIcon}
-          alt="user"
+          alt={message.role === Role.USER ? 'user' : 'assistant'}
         />
         <div className="w-full pt-5 md:pt-0 md:w-[calc(100%-50px)]">
           <ReactMarkdown
@@ -46,7 +34,9 @@ const Message = ({ message, idx }: MessageProps) => {
               code({ node, inline, className, children, ...props }) {
                 const match = /language-(\w+)/.exec(className || '')
                 return (
-                  <CodeBlock match={match} content={children} inline={inline} />
+                  <CodeBlock match={match} inline={inline}>
+                    {children}
+                  </CodeBlock>
                 )
               },
             }}
