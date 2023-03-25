@@ -35,15 +35,15 @@ const Header = () => {
         className="w-6 h-6 md:w-8 md:h-8 md:hidden"
         onClick={handleMenuButtonClick}
       >
-        <img src={hamburgerIcon} alt="menu" />
+        <img src={hamburgerIcon} alt="menu" className="w-full h-full" />
       </button>
-      <div className="flex">
+      <div className="flex items-center">
         <img
           src={robotIcon}
           alt="robot"
           className="w-6 h-6 md:w-8 md:h-8 mr-2 md:mr-4"
         />
-        <h1 className="align-center text-xl md:text-2xl">React GPT</h1>
+        <h1 className="text-xl md:text-2xl">React GPT</h1>
       </div>
       <div className="flex gap-3">
         <button onClick={handleInfoButtonClick}>

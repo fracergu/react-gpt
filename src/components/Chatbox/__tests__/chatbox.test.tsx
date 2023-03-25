@@ -12,6 +12,7 @@ import { RegenerateResponseTestIds } from '@components/RegenerateResponse/Regene
 describe('Chatbox', () => {
   // fix for scrollIntoView not being implemented in jsdom
   window.HTMLElement.prototype.scrollIntoView = function () {}
+  //TODO: try this with vi.stubGlobal()
 
   const preloadedState: RootState = {
     chats: {
