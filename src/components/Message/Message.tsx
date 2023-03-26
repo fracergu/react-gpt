@@ -10,10 +10,9 @@ export enum MessageTestIds {
 
 export interface MessageProps {
   message: MessageModel
-  idx: number
 }
 
-const Message = ({ message, idx }: MessageProps) => {
+const Message = ({ message }: MessageProps) => {
   return (
     <div
       data-testid={MessageTestIds.Container}

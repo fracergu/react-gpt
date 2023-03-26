@@ -4,6 +4,7 @@ import { selectCurrentChatId } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
 import { selectApiKey } from '@redux/ui/uiSlice'
 import { useEffect, useState } from 'react'
+import { v4 as uuid } from 'uuid'
 
 const API_URL = 'https://api.openai.com/v1/chat/completions'
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY
@@ -41,6 +42,7 @@ export const useStreamCompletion = () => {
 
     const onText = (text: string, isDone = false) => {
       const message = {
+        id: isDone ? uuid() : '-1',
         role: Role.ASSISTANT,
         content: text,
       }
@@ -63,6 +65,15 @@ export const useStreamCompletion = () => {
       }
     }
 
+    const removeIdsFromMessages = (
+      messages: Message[],
+    ): Array<{ role: string; content: string }> => {
+      return messages.map(message => {
+        const { id, ...rest } = message
+        return rest
+      })
+    }
+
     const fetchData = async () => {
       dispatch({
         type: 'chats/updateFetchStatus',
@@ -77,7 +88,7 @@ export const useStreamCompletion = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            messages: inputMessages,
+            messages: removeIdsFromMessages(inputMessages),
             model: OPENAI_CHAT_MODEL,
             stream: true,
           }),

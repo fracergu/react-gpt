@@ -4,18 +4,20 @@ import { render, screen } from '@testing-library/react'
 import Message, { MessageTestIds } from '../Message'
 
 const messageUser = {
+  id: '1',
   content: 'Hello, I am a **user**.',
   role: Role.USER,
 }
 
 const messageAssistant = {
+  id: '2',
   content: 'Hello, I am an _assistant_.',
   role: Role.ASSISTANT,
 }
 
 describe('Message', () => {
   it('renders user message with content and icon', () => {
-    render(<Message message={messageUser} idx={0} />)
+    render(<Message message={messageUser} />)
 
     const messageContainer = screen.getByTestId(MessageTestIds.Container)
     expect(messageContainer).toBeInTheDocument()
@@ -38,7 +40,7 @@ describe('Message', () => {
   })
 
   it('renders assistant message with content and icon', () => {
-    render(<Message message={messageAssistant} idx={1} />)
+    render(<Message message={messageAssistant} />)
 
     const messageContainer = screen.getByTestId(MessageTestIds.Container)
     expect(messageContainer).toBeInTheDocument()

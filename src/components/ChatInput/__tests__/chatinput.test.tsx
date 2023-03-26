@@ -20,10 +20,12 @@ describe('ChatInput', () => {
           id: '1',
           messages: [
             {
+              id: '1',
               role: Role.USER,
               content: 'Hello',
             },
             {
+              id: '2',
               role: Role.ASSISTANT,
               content: 'Hi there!',
             },

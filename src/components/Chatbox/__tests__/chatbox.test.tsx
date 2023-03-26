@@ -23,10 +23,12 @@ describe('Chatbox', () => {
           id: '1',
           messages: [
             {
+              id: '1',
               role: Role.USER,
               content: 'Hello',
             },
             {
+              id: '2',
               role: Role.ASSISTANT,
               content: 'Hi there!',
             },
@@ -49,6 +51,7 @@ describe('Chatbox', () => {
 
   it('renders incoming message', () => {
     const incomingMessage = {
+      id: '-1',
       role: Role.ASSISTANT,
       content: 'Incoming message',
     }

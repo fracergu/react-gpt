@@ -9,6 +9,7 @@ export interface Chat {
 }
 
 export interface Message {
+  id: string
   role: Role
   content: string
 }
