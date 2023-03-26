@@ -6,3 +6,9 @@ export const setSidebarOpen = (isOpen: boolean) => (dispatch: Dispatch) => {
     payload: isOpen,
   })
 }
+
+export const toggleAutoPromptCleanup = () => (dispatch: Dispatch) => {
+  dispatch({
+    type: 'ui/toggleAutoPromptCleanup',
+  })
+}

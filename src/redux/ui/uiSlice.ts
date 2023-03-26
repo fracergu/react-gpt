@@ -2,11 +2,13 @@ import { type RootState } from '@redux/store'
 import { createSlice } from '@reduxjs/toolkit'
 interface UiState {
   sidebarOpen: boolean
+  autoPromptCleanup: boolean
   apiKey?: string
 }
 
 export const initialState: UiState = {
   sidebarOpen: true,
+  autoPromptCleanup: true,
 }
 
 export const uiSlice = createSlice({
@@ -22,10 +24,15 @@ export const uiSlice = createSlice({
     setApiKey: (state, action) => {
       state.apiKey = action.payload
     },
+    toggleAutoPromptCleanup: state => {
+      state.autoPromptCleanup = !state.autoPromptCleanup
+    },
   },
 })
 
 export const selectSidebarOpen = (state: RootState) => state.ui.sidebarOpen
 export const selectApiKey = (state: RootState) => state.ui.apiKey
+export const selectAutoPromptCleanup = (state: RootState) =>
+  state.ui.autoPromptCleanup
 
 export default uiSlice.reducer
