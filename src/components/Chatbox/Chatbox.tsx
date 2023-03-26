@@ -37,11 +37,11 @@ const Chatbox = () => {
       {currentChat != null && (
         <>
           <div className="flex flex-col w-full overflow-y-auto leading-8">
-            {currentChat.messages.map((message, idx) => (
-              <Message message={message} idx={idx} key={idx} />
+            {currentChat.messages.map(message => (
+              <Message message={message} key={message.id} />
             ))}
             {chatIncomingMessage != null && (
-              <Message message={chatIncomingMessage} idx={-1} />
+              <Message message={chatIncomingMessage} />
             )}
             <div ref={messagesContainerRef}></div>
             {currentChat.fetchError !== undefined && (
