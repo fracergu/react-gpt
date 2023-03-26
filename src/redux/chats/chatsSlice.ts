@@ -1,11 +1,11 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { v4 as uuid } from 'uuid'
 import { FetchStatus } from '@enums/fetchStatus.enum'
-import { Chat, Chats, Message } from '@models/chat.model'
-import { RootState } from '@redux/store'
+import { type Chat, type Chats, type Message } from '@models/chat.model'
+import { type RootState } from '@redux/store'
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { createSelector } from 'reselect'
+import { v4 as uuid } from 'uuid'
 
-const chatsFromLocalStorage = JSON.parse(localStorage.getItem('chats') || '{}')
+const chatsFromLocalStorage = JSON.parse(localStorage.getItem('chats') ?? '{}')
 
 interface ChatsState {
   currentChatId?: string
@@ -39,6 +39,8 @@ export const chatsSlice = createSlice({
       state.currentChatId = action.payload
     },
     deleteChat: (state, action: PayloadAction<string>) => {
+      // TODO: Study this
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete state.chats[action.payload]
     },
     addMessage: (
@@ -77,7 +79,7 @@ export const selectCurrentChat = createSelector(
   selectChats,
   selectCurrentChatId,
   (chats, currentChatId) => {
-    if (!currentChatId) return
+    if (currentChatId === undefined) return
     return chats[currentChatId]
   },
 )

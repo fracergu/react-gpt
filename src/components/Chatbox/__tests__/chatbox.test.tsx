@@ -1,18 +1,18 @@
-import { screen } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
+import { RegenerateResponseTestIds } from '@components/RegenerateResponse/RegenerateResponse'
+import { Role } from '@models/chat.model'
+import { initialState as initialChatsState } from '@redux/chats/chatsSlice'
+import { type RootState } from '@redux/store'
+import { initialState as initialUiState } from '@redux/ui/uiSlice'
+import { screen } from '@testing-library/react'
+import { renderWithProviders } from 'src/utils/test-utils'
 
 import Chatbox, { ChatboxTestIds } from '../Chatbox'
-import { Role } from '@models/chat.model'
-import { renderWithProviders } from 'src/utils/test-utils'
-import { RootState } from '@redux/store'
-import { initialState as initialChatsState } from '@redux/chats/chatsSlice'
-import { initialState as initialUiState } from '@redux/ui/uiSlice'
-import { RegenerateResponseTestIds } from '@components/RegenerateResponse/RegenerateResponse'
 
 describe('Chatbox', () => {
   // fix for scrollIntoView not being implemented in jsdom
   window.HTMLElement.prototype.scrollIntoView = function () {}
-  //TODO: try this with vi.stubGlobal()
+  // TODO: try this with vi.stubGlobal()
 
   const preloadedState: RootState = {
     chats: {

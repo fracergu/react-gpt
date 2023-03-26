@@ -1,11 +1,10 @@
-import {
-  combineReducers,
-  configureStore,
-  PreloadedState,
-} from '@reduxjs/toolkit'
-
 import chatsReducer from '@redux/chats/chatsSlice'
 import uiReducer from '@redux/ui/uiSlice'
+import {
+  type PreloadedState,
+  combineReducers,
+  configureStore,
+} from '@reduxjs/toolkit'
 
 const rootReducer = combineReducers({
   chats: chatsReducer,

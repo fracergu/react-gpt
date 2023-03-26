@@ -1,6 +1,11 @@
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import type { RootState, AppDispatch } from './store'
+/* eslint-disable @typescript-eslint/no-restricted-imports */
+import {
+  type TypedUseSelectorHook,
+  useDispatch,
+  useSelector,
+} from 'react-redux'
 
-// Use throughout your app instead of plain `useDispatch` and `useSelector`
+import type { AppDispatch, RootState } from './store'
+
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector

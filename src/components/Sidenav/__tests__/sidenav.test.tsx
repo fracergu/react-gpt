@@ -1,9 +1,10 @@
 import { screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import Sidenav from '../Sidenav'
-import { vi } from 'vitest'
 import { renderWithProviders } from 'src/utils/test-utils'
 import Swal from 'sweetalert2'
+import { vi } from 'vitest'
+
+import Sidenav from '../Sidenav'
 
 const appDispatchMock = vi.fn()
 

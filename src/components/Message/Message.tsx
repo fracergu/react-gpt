@@ -1,16 +1,14 @@
-import ReactMarkdown from 'react-markdown'
-
-import { Role, Message as MessageModel } from '@models/chat.model'
-
 import personIcon from '@assets/icons/person.svg'
 import robotIcon from '@assets/icons/robot.svg'
 import CodeBlock from '@components/CodeBlock/CodeBlock'
+import { type Message as MessageModel, Role } from '@models/chat.model'
+import ReactMarkdown from 'react-markdown'
 
 export enum MessageTestIds {
   Container = 'message-container',
 }
 
-export type MessageProps = {
+export interface MessageProps {
   message: MessageModel
   idx: number
 }
@@ -29,10 +27,9 @@ const Message = ({ message, idx }: MessageProps) => {
         />
         <div className="w-full pt-5 md:pt-0 md:w-[calc(100%-50px)]">
           <ReactMarkdown
-            children={message.content}
             components={{
               code({ node, inline, className, children, ...props }) {
-                const match = /language-(\w+)/.exec(className || '')
+                const match = /language-(\w+)/.exec(className ?? '')
                 return (
                   <CodeBlock match={match} inline={inline}>
                     {children}
@@ -40,7 +37,9 @@ const Message = ({ message, idx }: MessageProps) => {
                 )
               },
             }}
-          />
+          >
+            {message.content}
+          </ReactMarkdown>
         </div>
       </div>
     </div>

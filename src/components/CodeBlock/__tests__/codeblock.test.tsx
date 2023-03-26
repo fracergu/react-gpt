@@ -1,7 +1,8 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import CodeBlock, { CodeBlockTestIds } from '../CodeBlock'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { vi } from 'vitest'
-import { act } from 'react-dom/test-utils'
+
+import CodeBlock, { CodeBlockTestIds } from '../CodeBlock'
+
 const codeContent = `console.log('Hello, World!')`
 
 const createRegExpExecArray = (array: [string, string]): RegExpExecArray => {
@@ -54,7 +55,7 @@ describe('CodeBlock', () => {
     const copiedMessage = await screen.findByText('Copied!')
     expect(copiedMessage).toBeInTheDocument()
 
-    if (navigator.clipboard) {
+    if (navigator.clipboard !== undefined) {
       const clipboardText = await navigator.clipboard.readText()
       expect(clipboardText).toBe(codeContent.replace(/\n$/, ''))
     }

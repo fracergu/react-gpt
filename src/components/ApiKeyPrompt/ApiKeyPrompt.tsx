@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export type ApiKeyPromptProps = {
+export interface ApiKeyPromptProps {
   updateApiKey: (apiKey: string) => void
 }
 
@@ -25,12 +25,6 @@ const ApiKeyPrompt = ({ updateApiKey }: ApiKeyPromptProps) => {
     setInputTouched(true)
     setApiKey(key)
     setIsApiKeyValid(checkApiKeyValidity(key))
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && isApiKeyValid) {
-      handleSetApiKeyButtonClick()
-    }
   }
 
   const checkApiKeyValidity = (key: string) => {
@@ -79,7 +73,7 @@ const ApiKeyPrompt = ({ updateApiKey }: ApiKeyPromptProps) => {
         </div>
         {!isApiKeyValid && inputTouched && (
           <p className="text-red-500">
-            Invalid API key: Must have 51 characters and 'sk-' prefix
+            Invalid API key: Must have 51 characters and &#39;sk-&#39; prefix
           </p>
         )}
       </div>

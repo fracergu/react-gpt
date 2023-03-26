@@ -1,9 +1,9 @@
-import robotIcon from '@assets/icons/robot.svg'
 import githubIcon from '@assets/icons/github.svg'
 import hamburgerIcon from '@assets/icons/hamburger.svg'
 import infoIcon from '@assets/icons/info.svg'
-import Swal from 'sweetalert2'
+import robotIcon from '@assets/icons/robot.svg'
 import { useAppDispatch } from '@redux/hooks'
+import Swal from 'sweetalert2'
 
 export enum HeaderTestIds {
   Container = 'header-container',
@@ -17,7 +17,7 @@ const Header = () => {
   }
 
   const handleInfoButtonClick = () => {
-    Swal.fire({
+    void Swal.fire({
       title: 'About React GPT',
       text: 'The app is still in development and continuously being improved so there might be changes that breaks your current state of the app. If this happens, please use the "Wipe all data" button on the bottom of de sidebar to reset the app. If you have any suggestions or find any bugs, please open an issue on GitHub.',
       icon: 'info',

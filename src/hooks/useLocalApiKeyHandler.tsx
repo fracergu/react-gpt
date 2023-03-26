@@ -6,7 +6,7 @@ export const useLocalApiKeyHandler = () => {
 
   const getApiKeyFromLocalStorage = () => {
     const ui = localStorage.getItem('ui')
-    if (!ui) return null
+    if (ui === null) return null
     const parsedUi = JSON.parse(ui)
     return parsedUi.apiKey
   }
@@ -14,10 +14,12 @@ export const useLocalApiKeyHandler = () => {
   const envApiKey = import.meta.env.VITE_OPENAI_API_KEY
   const localApiKey = getApiKeyFromLocalStorage()
 
-  const [apiKey, setApiKey] = useState<string | null>(localApiKey || envApiKey)
+  const [apiKey, setApiKey] = useState<string | null>(
+    localApiKey ?? envApiKey ?? null,
+  )
 
   useEffect(() => {
-    if (!apiKey || envApiKey) return
+    if (apiKey === null || envApiKey === null) return
     dispatch({
       type: 'ui/setApiKey',
       payload: apiKey,

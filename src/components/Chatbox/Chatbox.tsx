@@ -1,14 +1,14 @@
-import { Chat, Message as MessageModel } from '@models/chat.model'
+import ChatInput from '@components/ChatInput/ChatInput'
+import Message from '@components/Message/Message'
+import { useStreamCompletion } from '@hooks/useStreamCompletion'
+import { type Chat, type Message as MessageModel } from '@models/chat.model'
 import { selectCurrentChat } from '@redux/chats/chatsSlice'
 import { useAppSelector } from '@redux/hooks'
 import { useEffect, useRef } from 'react'
 
-import ChatInput from '@components/ChatInput/ChatInput'
-import Message from '@components/Message/Message'
-import { useStreamCompletion } from '@hooks/useStreamCompletion'
 import RegenerateResponse from '../RegenerateResponse/RegenerateResponse'
 
-export type ChatboxProps = {
+export interface ChatboxProps {
   messages: MessageModel[]
 }
 
@@ -24,7 +24,7 @@ const Chatbox = () => {
   const { setInputMessages } = useStreamCompletion()
 
   useEffect(() => {
-    if (currentChat) {
+    if (currentChat != null) {
       messagesContainerRef.current?.scrollIntoView()
     }
   }, [currentChat?.messages, chatIncomingMessage])
@@ -34,17 +34,17 @@ const Chatbox = () => {
       className="flex flex-col w-full flex-1 items-center"
       data-testid={ChatboxTestIds.Container}
     >
-      {currentChat && (
+      {currentChat != null && (
         <>
           <div className="flex flex-col w-full overflow-y-auto leading-8">
             {currentChat.messages.map((message, idx) => (
               <Message message={message} idx={idx} key={idx} />
             ))}
-            {chatIncomingMessage && (
+            {chatIncomingMessage != null && (
               <Message message={chatIncomingMessage} idx={-1} />
             )}
             <div ref={messagesContainerRef}></div>
-            {currentChat.fetchError && (
+            {currentChat.fetchError !== undefined && (
               <RegenerateResponse setInputMessages={setInputMessages} />
             )}
           </div>

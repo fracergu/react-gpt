@@ -1,12 +1,12 @@
+import sendIcon from '@assets/icons/send.svg'
 import Loader from '@components/Loader/Loader'
 import { FetchStatus } from '@enums/fetchStatus.enum'
+import { type Message, Role } from '@models/chat.model'
 import { selectCurrentChat, selectFetchStatus } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
 import { useCallback, useState } from 'react'
-import sendIcon from '@assets/icons/send.svg'
-import { Message, Role } from '@models/chat.model'
 
-type chatInputProps = {
+interface chatInputProps {
   setInputMessages: (messages: Message[]) => void
 }
 
@@ -34,7 +34,7 @@ const ChatInput = ({ setInputMessages }: chatInputProps) => {
   }
 
   const handleSendMessage = useCallback(() => {
-    if (!textareaValue || !currentChat) return
+    if (textareaValue.length === 0 || currentChat == null) return
     const newMessage = {
       role: Role.USER,
       content: textareaValue,

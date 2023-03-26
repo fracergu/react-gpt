@@ -1,12 +1,12 @@
+import { Role } from '@models/chat.model'
+import { initialState as initialChatsState } from '@redux/chats/chatsSlice'
+import { type RootState } from '@redux/store'
+import { initialState as initialUiState } from '@redux/ui/uiSlice'
 import { fireEvent, screen } from '@testing-library/react'
+import { renderWithProviders } from 'src/utils/test-utils'
+import { vi } from 'vitest'
 
 import ChatInput from '../ChatInput'
-import { renderWithProviders } from 'src/utils/test-utils'
-import { RootState } from '@redux/store'
-import { initialState as initialChatsState } from '@redux/chats/chatsSlice'
-import { initialState as initialUiState } from '@redux/ui/uiSlice'
-import { vi } from 'vitest'
-import { Role } from '@models/chat.model'
 
 describe('ChatInput', () => {
   const setInputMessages = vi.fn()

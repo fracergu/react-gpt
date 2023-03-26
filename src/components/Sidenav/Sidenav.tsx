@@ -1,14 +1,11 @@
+import plusIcon from '@assets/icons/plus.svg'
+import ChatItem from '@components/ChatItem/ChatItem'
+import { createChat, deleteChat, loadChat } from '@redux/chats/chatsActions'
 import { selectChats, selectCurrentChat } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
-
-import plusIcon from '@assets/icons/plus.svg'
-import { selectSidebarOpen } from '@redux/ui/uiSlice'
-
-import { deleteChat, createChat, loadChat } from '@redux/chats/chatsActions'
-import ChatItem from '@components/ChatItem/ChatItem'
-
-import Swal from 'sweetalert2'
 import { setSidebarOpen } from '@redux/ui/uiActions'
+import { selectSidebarOpen } from '@redux/ui/uiSlice'
+import Swal from 'sweetalert2'
 
 export enum SidenavTestIds {
   Container = 'sidenav-container',
@@ -37,7 +34,7 @@ const Sidenav = () => {
   }
 
   const handleWipeButtonClick = () => {
-    Swal.fire({
+    void Swal.fire({
       title: 'Are you sure?',
       text: 'Your chats and API key (if set) will be deleted.',
       icon: 'warning',

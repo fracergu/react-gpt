@@ -1,4 +1,4 @@
-import { Dispatch } from '@reduxjs/toolkit'
+import { type Dispatch } from '@reduxjs/toolkit'
 
 export const setSidebarOpen = (isOpen: boolean) => (dispatch: Dispatch) => {
   dispatch({

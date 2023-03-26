@@ -1,7 +1,7 @@
+import { Role } from '@models/chat.model'
 import { render, screen } from '@testing-library/react'
 
 import Message, { MessageTestIds } from '../Message'
-import { Role } from '@models/chat.model'
 
 const messageUser = {
   content: 'Hello, I am a **user**.',
@@ -26,10 +26,12 @@ describe('Message', () => {
     const content = screen.getByText((_, node) => {
       const hasText = (n: any) => n.textContent === 'Hello, I am a user.'
       const nodeHasText = hasText(node)
-      const childrenDontHaveText = Array.from(node!.children).every(
+      if (node === null) {
+        return false
+      }
+      const childrenDontHaveText = Array.from(node.children).every(
         child => !hasText(child),
       )
-
       return nodeHasText && childrenDontHaveText
     })
     expect(content).toBeInTheDocument()
@@ -47,7 +49,10 @@ describe('Message', () => {
     const content = screen.getByText((_, node) => {
       const hasText = (n: any) => n.textContent === 'Hello, I am an assistant.'
       const nodeHasText = hasText(node)
-      const childrenDontHaveText = Array.from(node!.children).every(
+      if (node === null) {
+        return false
+      }
+      const childrenDontHaveText = Array.from(node.children).every(
         child => !hasText(child),
       )
 

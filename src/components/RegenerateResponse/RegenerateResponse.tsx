@@ -1,5 +1,5 @@
 import { FetchStatus } from '@enums/fetchStatus.enum'
-import { Message } from '@models/chat.model'
+import { type Message } from '@models/chat.model'
 import { selectCurrentChat } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
 
@@ -7,7 +7,7 @@ export enum RegenerateResponseTestIds {
   Container = 'regenerate-response-container',
 }
 
-type RegenerateResponseProps = {
+interface RegenerateResponseProps {
   setInputMessages: (messages: Message[]) => void
 }
 
@@ -17,7 +17,7 @@ const RegenerateResponse = ({ setInputMessages }: RegenerateResponseProps) => {
   const currentChat = useAppSelector(selectCurrentChat)
 
   const handleRegenerateResponse = () => {
-    if (!currentChat) return
+    if (currentChat === undefined) return
     dispatch({
       type: 'chats/updateChatIncomingMessage',
       payload: null,
@@ -26,13 +26,13 @@ const RegenerateResponse = ({ setInputMessages }: RegenerateResponseProps) => {
       type: 'chats/updateFetchStatus',
       payload: FetchStatus.LOADING,
     })
-    setInputMessages(currentChat.messages)
+    setInputMessages(currentChat?.messages)
   }
 
   return (
     <div data-testid={RegenerateResponseTestIds.Container}>
       <h1 className="text-red-500 text-center mt-2">
-        {`Something went wrong: ${currentChat?.fetchError}`}
+        {`Something went wrong: ${currentChat?.fetchError ?? 'Unknown error'}`}
       </h1>
       <button
         className="font-bold underline underline-offset-2 text-center w-full m-x-auto"

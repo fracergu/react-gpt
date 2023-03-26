@@ -1,10 +1,10 @@
-import { ReactNode, useEffect, useState } from 'react'
+import copyIcon from '@assets/icons/copy.svg'
+import { type ReactNode, useEffect, useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { irBlack } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
-import copyIcon from '@assets/icons/copy.svg'
 
-export type CodeBlockProps = {
+export interface CodeBlockProps {
   inline?: boolean
   match: RegExpExecArray | null
   children: ReactNode
@@ -14,7 +14,7 @@ export enum CodeBlockTestIds {
   Container = 'code-block-container',
 }
 
-const CodeBlock = ({ inline, match, children }: CodeBlockProps) => {
+const CodeBlock = ({ inline = false, match, children }: CodeBlockProps) => {
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
@@ -29,11 +29,13 @@ const CodeBlock = ({ inline, match, children }: CodeBlockProps) => {
     <div className="my-4" data-testid={CodeBlockTestIds.Container}>
       <div className="flex items-center text-gray-400 bg-zinc-900 py-2 px-4 justify-between rounded-t-md items-center">
         <span className="font-bold text-xs ">
-          {match && match[1] ? match[1] : ''}
+          {match !== null ? match[1] : ''}
         </span>
         <CopyToClipboard
           text={String(children).replace(/\n$/, '')}
-          onCopy={() => setCopied(true)}
+          onCopy={() => {
+            setCopied(true)
+          }}
         >
           <div className="flex items-center justify-center">
             <div className="text-xs text-gray-400 mr-2">
@@ -47,12 +49,13 @@ const CodeBlock = ({ inline, match, children }: CodeBlockProps) => {
       </div>
       <div className="overflow-x-auto rounded-b-md">
         <SyntaxHighlighter
-          children={String(children).replace(/\n$/, '')}
-          style={irBlack as any}
+          style={irBlack}
           className="!whitespace-pre !px-4 !py-2"
-          language={match && match[1] ? match[1] : ''}
+          language={match !== null ? match[1] : ''}
           PreTag="div"
-        />
+        >
+          {String(children).replace(/\n$/, '')}
+        </SyntaxHighlighter>
       </div>
     </div>
   ) : (

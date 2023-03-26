@@ -1,6 +1,6 @@
 import binIcon from '@assets/icons/bin.svg'
 
-export type ChatItemProps = {
+export interface ChatItemProps {
   chatId: string
   currentChatId: string | undefined
   handleLoadChat: (chatId: string) => void
@@ -28,11 +28,18 @@ const ChatItem = ({
       <div className="flex justify-between items-center p-3 w-full">
         <button
           className="flex text-ellipsis overflow-hidden whitespace-nowrap max-w-[75%]"
-          onClick={() => handleLoadChat(chatId)}
+          onClick={() => {
+            handleLoadChat(chatId)
+          }}
         >
           {createdAt}
         </button>
-        <button onClick={() => handleDeleteChat(chatId)} className="w-6 h-6">
+        <button
+          onClick={() => {
+            handleDeleteChat(chatId)
+          }}
+          className="w-6 h-6"
+        >
           <img src={binIcon} alt="delete chat" />
         </button>
       </div>

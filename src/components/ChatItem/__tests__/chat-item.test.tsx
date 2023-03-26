@@ -1,7 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import ChatItem from '../ChatItem'
 import { vi } from 'vitest'
+
+import ChatItem from '../ChatItem'
 
 describe('ChatItem', () => {
   const handleLoadChatMock = vi.fn()

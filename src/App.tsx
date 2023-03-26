@@ -17,7 +17,9 @@ function App() {
       className="flex flex-col h-screen bg-zinc-900  text-gray-100 transition-all duration-300 ease-in-out"
     >
       <Header />
-      {(!apiKey && <ApiKeyPrompt updateApiKey={setApiKey} />) || (
+      {apiKey === null ? (
+        <ApiKeyPrompt updateApiKey={setApiKey} />
+      ) : (
         <div className="flex-1 flex overflow-hidden relative">
           <Sidenav />
           <Chatbox />
