@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
+import Swal from 'sweetalert2'
 import { vi } from 'vitest'
 
 import ChatItem from '../ChatItem'
@@ -39,10 +40,47 @@ describe('ChatItem', () => {
     expect(handleLoadChatMock).toHaveBeenCalledWith('test-chat-id')
   })
 
-  it('invokes handleDeleteChat function on delete chat button click', () => {
-    const deleteChatButton = screen.getByRole('button', { name: 'delete chat' })
-    fireEvent.click(deleteChatButton)
-    expect(handleDeleteChatMock).toHaveBeenCalledTimes(1)
+  // it('invokes handleDeleteChat function on delete chat button click', () => {
+  //   const deleteChatButton = screen.getByRole('button', { name: 'delete chat' })
+  //   fireEvent.click(deleteChatButton)
+  //   expect(handleDeleteChatMock).toHaveBeenCalledTimes(1)
+  //   expect(handleDeleteChatMock).toHaveBeenCalledWith('test-chat-id')
+  // })
+
+  it('should show SweetAlert2 confirmation when delete button is clicked', async () => {
+    const deleteButton = screen.getByAltText('delete chat')
+    const swalFireSpy = vi.spyOn(Swal, 'fire')
+
+    fireEvent.click(deleteButton)
+
+    expect(swalFireSpy).toHaveBeenCalledTimes(1)
+    expect(swalFireSpy).toHaveBeenCalledWith({
+      title: 'Are you sure?',
+      text: 'This chat will be deleted.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#1d4ed8',
+      cancelButtonColor: '#b91c1c',
+    })
+
+    swalFireSpy.mockRestore()
+  })
+
+  it('should invoke handleDeleteChat function when SweetAlert2 confirmation is confirmed', async () => {
+    const deleteButton = screen.getByAltText('delete chat')
+    const swalFireSpy = vi.spyOn(Swal, 'fire').mockResolvedValueOnce({
+      isConfirmed: true,
+      isDenied: false,
+      isDismissed: false,
+    })
+
+    fireEvent.click(deleteButton)
+
+    await waitFor(() => {
+      expect(handleDeleteChatMock).toHaveBeenCalledTimes(1)
+    })
     expect(handleDeleteChatMock).toHaveBeenCalledWith('test-chat-id')
+
+    swalFireSpy.mockRestore()
   })
 })

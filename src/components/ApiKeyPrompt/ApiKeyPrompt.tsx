@@ -58,7 +58,7 @@ const ApiKeyPrompt = ({ updateApiKey }: ApiKeyPromptProps) => {
         <div className="flex gap-3">
           <input
             className="w-fit focus:outline-none p-2 bg-zinc-700 text-gray-100 rounded-md grow"
-            type="text"
+            type="password"
             placeholder="API key"
             value={apiKey}
             onChange={handleApiKeyInputChange}

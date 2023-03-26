@@ -1,4 +1,4 @@
-import { screen, fireEvent } from '@testing-library/react'
+import { screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { renderWithProviders } from 'src/utils/test-utils'
 import Swal from 'sweetalert2'
@@ -104,5 +104,24 @@ describe('Sidenav', () => {
     })
     fireEvent.click(wipeAllDataButton)
     expect(spy).toHaveBeenCalledTimes(1)
+  })
+
+  it('cleans the local storage and makes a reload on wipe all data dialog confirm', async () => {
+    const spyLocalStorage = vi.spyOn(window.localStorage, 'clear')
+    const spyWindowReload = vi.spyOn(window.location, 'reload')
+    const swalFireSpy = vi.spyOn(Swal, 'fire').mockResolvedValue({
+      isConfirmed: true,
+      isDenied: false,
+      isDismissed: false,
+    })
+    const wipeAllDataButton = screen.getByRole('button', {
+      name: 'Wipe all data',
+    })
+    fireEvent.click(wipeAllDataButton)
+    await waitFor(() => {
+      expect(spyLocalStorage).toHaveBeenCalledTimes(1)
+      expect(spyWindowReload).toHaveBeenCalledTimes(1)
+    })
+    swalFireSpy.mockRestore()
   })
 })
