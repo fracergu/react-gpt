@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export type ApiKeyPromptProps = {
+export interface ApiKeyPromptProps {
   updateApiKey: (apiKey: string) => void
 }
 
@@ -21,13 +21,10 @@ const ApiKeyPrompt = ({ updateApiKey }: ApiKeyPromptProps) => {
   }
 
   const handleApiKeyInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const key = e.target.value
     setInputTouched(true)
-    setApiKey(e.target.value)
-    if (e.target.value.length > 0) {
-      setIsApiKeyValid(checkApiKeyValidity(e.target.value))
-    } else {
-      setIsApiKeyValid(false)
-    }
+    setApiKey(key)
+    setIsApiKeyValid(checkApiKeyValidity(key))
   }
 
   const checkApiKeyValidity = (key: string) => {
@@ -35,6 +32,8 @@ const ApiKeyPrompt = ({ updateApiKey }: ApiKeyPromptProps) => {
     const validPrefix = key.startsWith('sk-')
     return validLength && validPrefix
   }
+
+  const isSetButtonEnabled = isApiKeyValid && inputTouched
 
   return (
     <div
@@ -67,14 +66,14 @@ const ApiKeyPrompt = ({ updateApiKey }: ApiKeyPromptProps) => {
           <button
             className="bg-blue-800 text-white rounded-md p-2 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleSetApiKeyButtonClick}
-            disabled={!isApiKeyValid && inputTouched}
+            disabled={!isSetButtonEnabled}
           >
             Set API key
           </button>
         </div>
         {!isApiKeyValid && inputTouched && (
           <p className="text-red-500">
-            Invalid API key: Must have 51 characters and 'sk-' prefix
+            Invalid API key: Must have 51 characters and &#39;sk-&#39; prefix
           </p>
         )}
       </div>

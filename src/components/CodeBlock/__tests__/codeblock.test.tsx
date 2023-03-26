@@ -1,18 +1,63 @@
-import { renderWithProviders } from 'src/utils/test-utils'
-import { screen } from '@testing-library/react'
-import CodeBlock, { CodeBlockProps, CodeBlockTestIds } from '../CodeBlock'
-import { ReactNode } from 'react'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { vi } from 'vitest'
+
+import CodeBlock, { CodeBlockTestIds } from '../CodeBlock'
+
+const codeContent = `console.log('Hello, World!')`
+
+const createRegExpExecArray = (array: [string, string]): RegExpExecArray => {
+  const result = array as unknown as RegExpExecArray
+  Object.defineProperty(result, 'groups', {
+    value: undefined,
+  })
+  return result
+}
+
+window.prompt = vi.fn()
 
 describe('CodeBlock', () => {
-  const MOCKED_PROPS: CodeBlockProps = {
-    match: {} as RegExpExecArray,
-    content: {} as ReactNode & ReactNode[],
-  }
+  it('renders a non-inline code block', () => {
+    const match = createRegExpExecArray(['', 'javascript'])
+    render(
+      <CodeBlock inline={false} match={match}>
+        {codeContent}
+      </CodeBlock>,
+    )
 
-  it('renders the code block', () => {
-    renderWithProviders(<CodeBlock {...MOCKED_PROPS} />)
-    expect(screen.getByTestId(CodeBlockTestIds.Container)).toBeInTheDocument()
+    const container = screen.getByTestId(CodeBlockTestIds.Container)
+    expect(container).toBeInTheDocument()
+    expect(container).toHaveTextContent(codeContent)
   })
 
-  // TODO: Add tests for code block when inline is true or false
+  it('renders an inline code block', () => {
+    render(
+      <CodeBlock match={null} inline>
+        {codeContent}
+      </CodeBlock>,
+    )
+
+    const inlineCodeBlock = screen.getByText(codeContent)
+    expect(inlineCodeBlock).toBeInTheDocument()
+    expect(inlineCodeBlock.tagName).toBe('CODE')
+  })
+
+  it('copies the content and shows "Copied!" message', async () => {
+    const match = createRegExpExecArray(['', 'javascript'])
+    render(
+      <CodeBlock inline={false} match={match}>
+        {codeContent}
+      </CodeBlock>,
+    )
+
+    const copyButton = screen.getByRole('button', { name: 'copy' })
+    fireEvent.click(copyButton)
+
+    const copiedMessage = await screen.findByText('Copied!')
+    expect(copiedMessage).toBeInTheDocument()
+
+    if (navigator.clipboard !== undefined) {
+      const clipboardText = await navigator.clipboard.readText()
+      expect(clipboardText).toBe(codeContent.replace(/\n$/, ''))
+    }
+  })
 })

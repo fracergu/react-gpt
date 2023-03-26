@@ -1,8 +1,6 @@
-export type Chats = {
-  [id: string]: Chat
-}
+export type Chats = Record<string, Chat>
 
-export type Chat = {
+export interface Chat {
   id: string
   messages: Message[]
   createdAt: number
@@ -10,7 +8,7 @@ export type Chat = {
   fetchError?: string
 }
 
-export type Message = {
+export interface Message {
   role: Role
   content: string
 }

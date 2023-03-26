@@ -1,9 +1,9 @@
-import robotIcon from '@assets/robot.svg'
-import githubIcon from '@assets/github.svg'
-import hamburgerIcon from '@assets/hamburger.svg'
-import infoIcon from '@assets/info.svg'
-import Swal from 'sweetalert2'
+import githubIcon from '@assets/icons/github.svg'
+import hamburgerIcon from '@assets/icons/hamburger.svg'
+import infoIcon from '@assets/icons/info.svg'
+import robotIcon from '@assets/icons/robot.svg'
 import { useAppDispatch } from '@redux/hooks'
+import Swal from 'sweetalert2'
 
 export enum HeaderTestIds {
   Container = 'header-container',
@@ -17,7 +17,7 @@ const Header = () => {
   }
 
   const handleInfoButtonClick = () => {
-    Swal.fire({
+    void Swal.fire({
       title: 'About React GPT',
       text: 'The app is still in development and continuously being improved so there might be changes that breaks your current state of the app. If this happens, please use the "Wipe all data" button on the bottom of de sidebar to reset the app. If you have any suggestions or find any bugs, please open an issue on GitHub.',
       icon: 'info',
@@ -35,15 +35,15 @@ const Header = () => {
         className="w-6 h-6 md:w-8 md:h-8 md:hidden"
         onClick={handleMenuButtonClick}
       >
-        <img src={hamburgerIcon} alt="menu" />
+        <img src={hamburgerIcon} alt="menu" className="w-full h-full" />
       </button>
-      <div className="flex">
+      <div className="flex items-center">
         <img
           src={robotIcon}
           alt="robot"
           className="w-6 h-6 md:w-8 md:h-8 mr-2 md:mr-4"
         />
-        <h1 className="align-center text-xl md:text-2xl">React GPT</h1>
+        <h1 className="text-xl md:text-2xl">React GPT</h1>
       </div>
       <div className="flex gap-3">
         <button onClick={handleInfoButtonClick}>

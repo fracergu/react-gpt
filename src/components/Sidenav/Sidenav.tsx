@@ -1,15 +1,10 @@
-import {
-  selectChats,
-  selectCurrentChat,
-  selectFetchStatus,
-} from '@redux/chats/chatsSlice'
+import plusIcon from '@assets/icons/plus.svg'
+import ChatItem from '@components/ChatItem/ChatItem'
+import { createChat, deleteChat, loadChat } from '@redux/chats/chatsActions'
+import { selectChats, selectCurrentChat } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
-
-import binIcon from '@assets/bin.svg'
-import plusIcon from '@assets/plus.svg'
-import { FetchStatus } from '@enums/fetchStatus.enum'
+import { setSidebarOpen } from '@redux/ui/uiActions'
 import { selectSidebarOpen } from '@redux/ui/uiSlice'
-
 import Swal from 'sweetalert2'
 
 export enum SidenavTestIds {
@@ -19,39 +14,27 @@ export enum SidenavTestIds {
 const Sidenav = () => {
   const chats = useAppSelector(selectChats)
   const currentChat = useAppSelector(selectCurrentChat)
-  const fetchStatus = useAppSelector(selectFetchStatus)
   const dispatch = useAppDispatch()
   const sidebarOpen = useAppSelector(selectSidebarOpen)
 
   const handleDeleteChat = (chatId: string) => {
-    dispatch({
-      type: 'chats/deleteChat',
-      payload: chatId,
-    })
+    dispatch(deleteChat(chatId))
   }
 
   const handleCreateChat = () => {
-    dispatch({
-      type: 'chats/createChat',
-    })
+    dispatch(createChat())
   }
 
   const handleLoadChat = (chatId: string) => {
-    dispatch({
-      type: 'chats/loadChat',
-      payload: chatId,
-    })
+    dispatch(loadChat(chatId))
   }
 
   const handleBackdropClick = () => {
-    dispatch({
-      type: 'ui/setSidebarOpen',
-      payload: false,
-    })
+    dispatch(setSidebarOpen(false))
   }
 
   const handleWipeButtonClick = () => {
-    Swal.fire({
+    void Swal.fire({
       title: 'Are you sure?',
       text: 'Your chats and API key (if set) will be deleted.',
       icon: 'warning',
@@ -83,32 +66,14 @@ const Sidenav = () => {
         </button>
         <div className="overflow-y-auto text-sm">
           {Object.keys(chats).map(chatId => (
-            <div
+            <ChatItem
               key={chatId}
-              className={`flex justify-between items-center 
-            ${
-              chatId === currentChat?.id
-                ? 'bg-blue-700'
-                : 'bg-blue-800 hover:bg-blue-700 hover:shadow'
-            }
-            transition-colors duration-3 `}
-            >
-              <div className="flex justify-between items-center p-3 w-full">
-                <button
-                  className="flex text-ellipsis overflow-hidden whitespace-nowrap max-w-[75%]"
-                  onClick={() => handleLoadChat(chatId)}
-                  disabled={fetchStatus === FetchStatus.LOADING}
-                >
-                  {new Date(chats[chatId].createdAt).toLocaleString()}
-                </button>
-                <button
-                  onClick={() => handleDeleteChat(chatId)}
-                  className="w-6 h-6"
-                >
-                  <img src={binIcon} />
-                </button>
-              </div>
-            </div>
+              chatId={chatId}
+              currentChatId={currentChat?.id}
+              handleLoadChat={handleLoadChat}
+              handleDeleteChat={handleDeleteChat}
+              createdAt={new Date(chats[chatId].createdAt).toLocaleString()}
+            />
           ))}
         </div>
         <div className="p-3 mt-auto items-center w-full">

@@ -1,17 +1,11 @@
-import React, { PropsWithChildren } from 'react'
+import type { PreloadedState } from '@reduxjs/toolkit'
 import { render } from '@testing-library/react'
 import type { RenderOptions } from '@testing-library/react'
-import type { PreloadedState } from '@reduxjs/toolkit'
+import React, { type PropsWithChildren } from 'react'
 import { Provider } from 'react-redux'
 
-import { AppStore, RootState, setupStore } from '@redux/store'
-// As a basic setup, import your same slice reducers
-
-import { initialState as initialChatsState } from '@redux/chats/chatsSlice'
-import { initialState as initialUiState } from '@redux/ui/uiSlice'
-
-// This type interface extends the default options for render from RTL, as well
-// as allows the user to specify other things such as initialState, store.
+import { setupStore } from '../redux/store'
+import type { AppStore, RootState } from '../redux/store'
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   preloadedState?: PreloadedState<RootState>
   store?: AppStore
@@ -20,16 +14,13 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
 export function renderWithProviders(
   ui: React.ReactElement,
   {
-    preloadedState = { chats: initialChatsState, ui: initialUiState },
-    // Automatically create a store instance if no store was passed in
+    preloadedState = {},
     store = setupStore(preloadedState),
     ...renderOptions
   }: ExtendedRenderOptions = {},
 ) {
-  function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
+  function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return <Provider store={store}>{children}</Provider>
   }
-
-  // Return an object with the store and all of RTL's query functions
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) }
 }

@@ -1,18 +1,12 @@
+import sendIcon from '@assets/icons/send.svg'
 import Loader from '@components/Loader/Loader'
 import { FetchStatus } from '@enums/fetchStatus.enum'
+import { type Message, Role } from '@models/chat.model'
 import { selectCurrentChat, selectFetchStatus } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { useState } from 'react'
-import sendIcon from '@assets/send.svg'
-import { Message, Role } from '@models/chat.model'
+import { useCallback, useState } from 'react'
 
-export enum ChatInputTestIds {
-  Container = 'chat-input-container',
-  Textarea = 'chat-input-textarea',
-  SendButton = 'chat-input-send-button',
-}
-
-type chatInputProps = {
+interface chatInputProps {
   setInputMessages: (messages: Message[]) => void
 }
 
@@ -39,8 +33,8 @@ const ChatInput = ({ setInputMessages }: chatInputProps) => {
     }
   }
 
-  const handleSendMessage = () => {
-    if (!textareaValue || !currentChat) return
+  const handleSendMessage = useCallback(() => {
+    if (textareaValue.length === 0 || currentChat == null) return
     const newMessage = {
       role: Role.USER,
       content: textareaValue,
@@ -52,16 +46,12 @@ const ChatInput = ({ setInputMessages }: chatInputProps) => {
 
     setTextareaValue('')
     setInputMessages([...currentChat.messages, newMessage])
-  }
+  }, [currentChat, textareaValue, setInputMessages, dispatch])
 
   return (
-    <div
-      data-testid={ChatInputTestIds.Container}
-      className="relative mt-auto flex px-4 py-6 w-full justify-center bg-zinc-800"
-    >
+    <div className="relative mt-auto flex px-4 py-6 w-full justify-center bg-zinc-800">
       <div className="flex gap-4 w-full max-w-[90ch]">
         <textarea
-          data-testid={ChatInputTestIds.Textarea}
           id="messageInput"
           className="resize-none w-full focus:outline-none p-2 bg-zinc-700 text-gray-100 rounded-md"
           placeholder="Type your message here..."
@@ -71,11 +61,7 @@ const ChatInput = ({ setInputMessages }: chatInputProps) => {
         />
         {fetchStatus === FetchStatus.LOADING && <Loader />}
         {fetchStatus !== FetchStatus.LOADING && (
-          <button
-            data-testid={ChatInputTestIds.SendButton}
-            className="p-1"
-            onClick={handleSendMessage}
-          >
+          <button className="p-1" onClick={handleSendMessage}>
             <img className="w-10 h-10" src={sendIcon} alt="send" />
           </button>
         )}
