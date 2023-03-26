@@ -6,6 +6,7 @@ import { type RootState } from '@redux/store'
 import { initialState as initialUiState } from '@redux/ui/uiSlice'
 import { screen } from '@testing-library/react'
 import { renderWithProviders } from 'src/utils/test-utils'
+import { getTokenAmount } from 'src/utils/tokens-utils'
 
 import Chatbox, { ChatboxTestIds } from '../Chatbox'
 
@@ -26,11 +27,15 @@ describe('Chatbox', () => {
               id: '1',
               role: Role.USER,
               content: 'Hello',
+              tokens: getTokenAmount('Hello'),
+              ignored: false,
             },
             {
               id: '2',
               role: Role.ASSISTANT,
               content: 'Hi there!',
+              tokens: getTokenAmount('Hi there!'),
+              ignored: false,
             },
           ],
           createdAt: Date.now(),
@@ -54,6 +59,8 @@ describe('Chatbox', () => {
       id: '-1',
       role: Role.ASSISTANT,
       content: 'Incoming message',
+      tokens: getTokenAmount('Incoming message'),
+      ignored: false,
     }
 
     const stateWithIncomingMessage = {

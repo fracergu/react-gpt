@@ -12,6 +12,8 @@ export interface Message {
   id: string
   role: Role
   content: string
+  tokens: number
+  ignored: boolean
 }
 
 export enum Role {

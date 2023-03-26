@@ -42,6 +42,7 @@ export const chatsSlice = createSlice({
       // TODO: Study this
       // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete state.chats[action.payload]
+      state.fetchStatus = FetchStatus.IDLE
     },
     addMessage: (
       state,
@@ -67,6 +68,17 @@ export const chatsSlice = createSlice({
       const { chatId, errorMessage } = action.payload
       state.chats[chatId].fetchError = errorMessage
       state.fetchStatus = FetchStatus.FAILED
+    },
+    ignoreNextTailMessage: (state, action: PayloadAction<string>) => {
+      const chatId = action.payload
+      if (chatId !== '') {
+        const nonIgnoredMessages = state.chats[chatId].messages.filter(
+          m => !m.ignored,
+        )
+        if (nonIgnoredMessages.length > 0) {
+          nonIgnoredMessages[0].ignored = true
+        }
+      }
     },
   },
 })

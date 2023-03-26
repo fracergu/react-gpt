@@ -1,18 +1,23 @@
-import { Role } from '@models/chat.model'
+import { Role, type Message as MessageModel } from '@models/chat.model'
 import { render, screen } from '@testing-library/react'
+import { getTokenAmount } from 'src/utils/tokens-utils'
 
 import Message, { MessageTestIds } from '../Message'
 
-const messageUser = {
+const messageUser: MessageModel = {
   id: '1',
   content: 'Hello, I am a **user**.',
   role: Role.USER,
+  tokens: getTokenAmount('Hello, I am a **user**.'),
+  ignored: false,
 }
 
-const messageAssistant = {
+const messageAssistant: MessageModel = {
   id: '2',
   content: 'Hello, I am an _assistant_.',
   role: Role.ASSISTANT,
+  tokens: getTokenAmount('Hello, I am an _assistant_.'),
+  ignored: false,
 }
 
 describe('Message', () => {

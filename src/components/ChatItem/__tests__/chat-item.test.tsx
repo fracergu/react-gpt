@@ -40,13 +40,6 @@ describe('ChatItem', () => {
     expect(handleLoadChatMock).toHaveBeenCalledWith('test-chat-id')
   })
 
-  // it('invokes handleDeleteChat function on delete chat button click', () => {
-  //   const deleteChatButton = screen.getByRole('button', { name: 'delete chat' })
-  //   fireEvent.click(deleteChatButton)
-  //   expect(handleDeleteChatMock).toHaveBeenCalledTimes(1)
-  //   expect(handleDeleteChatMock).toHaveBeenCalledWith('test-chat-id')
-  // })
-
   it('should show SweetAlert2 confirmation when delete button is clicked', async () => {
     const deleteButton = screen.getByAltText('delete chat')
     const swalFireSpy = vi.spyOn(Swal, 'fire')

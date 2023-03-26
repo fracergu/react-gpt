@@ -1,9 +1,11 @@
 import { FetchStatus } from '@enums/fetchStatus.enum'
 import { type Message, Role } from '@models/chat.model'
+import { addMessage } from '@redux/chats/chatsActions'
 import { selectCurrentChatId } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
 import { selectApiKey } from '@redux/ui/uiSlice'
 import { useEffect, useState } from 'react'
+import { getTokenAmount } from 'src/utils/tokens-utils'
 import { v4 as uuid } from 'uuid'
 
 const API_URL = 'https://api.openai.com/v1/chat/completions'
@@ -19,7 +21,6 @@ const decodeResponse = (response?: Uint8Array) => {
 
   const pattern = /"delta":\s*({.*?"content":\s*".*?"})/g
   const decodedText = utf8Decoder.decode(response)
-  console.log(decodedText)
   const matches: string[] = []
 
   let match
@@ -41,37 +42,35 @@ export const useStreamCompletion = () => {
     if (inputMessages.length === 0) return
 
     const onText = (text: string, isDone = false) => {
-      const message = {
+      const message: Message = {
         id: isDone ? uuid() : '-1',
         role: Role.ASSISTANT,
         content: text,
+        tokens: getTokenAmount(text),
+        ignored: false,
       }
       dispatch({
         type: 'chats/updateChatIncomingMessage',
         payload: { chatId: currentChatId, message: isDone ? null : message },
       })
-      if (isDone) {
+      if (isDone && currentChatId !== undefined) {
         dispatch({
           type: 'chats/updateFetchStatus',
           payload: FetchStatus.IDLE,
         })
-        dispatch({
-          type: 'chats/addMessage',
-          payload: {
-            chatId: currentChatId,
-            message,
-          },
-        })
+        dispatch(addMessage(currentChatId, message))
       }
     }
 
-    const removeIdsFromMessages = (
+    const cleanMessagesForAPI = (
       messages: Message[],
     ): Array<{ role: string; content: string }> => {
-      return messages.map(message => {
-        const { id, ...rest } = message
-        return rest
-      })
+      return messages
+        .filter(m => !m.ignored)
+        .map(message => {
+          const { id, tokens, ignored, ...rest } = message
+          return rest
+        })
     }
 
     const fetchData = async () => {
@@ -88,7 +87,7 @@ export const useStreamCompletion = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            messages: removeIdsFromMessages(inputMessages),
+            messages: cleanMessagesForAPI(inputMessages),
             model: OPENAI_CHAT_MODEL,
             stream: true,
           }),

@@ -19,7 +19,7 @@ const Header = () => {
   const handleInfoButtonClick = () => {
     void Swal.fire({
       title: 'About React GPT',
-      text: 'The app is still in development and continuously being improved so there might be changes that breaks your current state of the app. If this happens, please use the "Wipe all data" button on the bottom of de sidebar to reset the app. If you have any suggestions or find any bugs, please open an issue on GitHub.',
+      text: 'The app is still in development and continuously being improved so there might be changes that breaks your current state of the app. If this happens, please use the "Wipe all data" button on the bottom of the sidebar to reset the app. Also cleaning your browser localStorage should work. If you have any suggestions or find any bugs, please open an issue on GitHub.',
       icon: 'info',
       confirmButtonText: 'Cool!',
       confirmButtonColor: '#1d4ed8',
