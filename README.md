@@ -28,11 +28,12 @@ Finally, start the development server with `npm run dev` or build for production
 - Use [Git Branch Naming Conventions](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716) for branch names. and [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages.
 - Also, name the branch starting with the issue number, for example: `/feature/1-branch-name`.
 
+## Live Demo
+
+https://fracergu.github.io/react-gpt/
+
 ## Changes in sight
 
-- Implement react-redux for state management
-- Save conversations to local storage and implement a side menu to continue previous conversations.
-- Implement a simple but nice UI with TailwindCSS with dark mode
 - Solve the 2048 API token limit for prompt. As the conversation grows, the API token limit is reached and the conversation stops. This is a limitation of the API. Two possible solutions are:
   - Remove older messages from the prompt (this will make ChatGPT forget that part of the conversation)
   - Ask ChatGPT on background to generate a summary of the conversation and use that as the context for the next message. This will make ChatGPT remember the whole conversation but lose details.

@@ -1,4 +1,5 @@
 import binIcon from '@assets/icons/bin.svg'
+import Swal from 'sweetalert2'
 
 export interface ChatItemProps {
   chatId: string
@@ -15,6 +16,21 @@ const ChatItem = ({
   handleDeleteChat,
   createdAt,
 }: ChatItemProps) => {
+  const confirmDeletion = async (chatId: string) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This chat will be deleted.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#1d4ed8',
+      cancelButtonColor: '#b91c1c',
+    })
+
+    if (result.isConfirmed) {
+      handleDeleteChat(chatId)
+    }
+  }
+
   return (
     <div
       className={`flex justify-between items-center 
@@ -36,7 +52,7 @@ const ChatItem = ({
         </button>
         <button
           onClick={() => {
-            handleDeleteChat(chatId)
+            void confirmDeletion(chatId)
           }}
           className="w-6 h-6"
         >
