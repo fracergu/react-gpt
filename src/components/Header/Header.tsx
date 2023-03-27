@@ -29,7 +29,7 @@ const Header = () => {
   return (
     <nav
       data-testid={HeaderTestIds.Container}
-      className="p-4 md:p-6 flex items-center justify-between font-open-sans bg-blue-800"
+      className="p-4 md:p-6 flex items-center justify-between font-open-sans bg-slate-800"
     >
       <button
         className="w-6 h-6 md:w-8 md:h-8 md:hidden"
@@ -43,7 +43,7 @@ const Header = () => {
           alt="robot"
           className="w-6 h-6 md:w-8 md:h-8 mr-2 md:mr-4"
         />
-        <h1 className="text-xl md:text-2xl">React GPT</h1>
+        <h1 className="text-xl md:text-2xl font-bold">React GPT</h1>
       </div>
       <div className="flex gap-3">
         <button onClick={handleInfoButtonClick}>

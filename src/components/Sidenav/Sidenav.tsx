@@ -53,13 +53,13 @@ const Sidenav = () => {
     <div className="flex">
       <div
         data-testid={SidenavTestIds.Container}
-        className={`flex flex-col z-20 min-w-[250px] w-[250px] border-gray-300 h-full bg-blue-800 text-gray-100 z-10 absolute md:relative ${
+        className={`flex flex-col z-20 min-w-[250px] w-[250px] border-gray-300 h-full bg-slate-800 text-gray-100 z-10 absolute md:relative ${
           sidebarOpen ? 'block' : 'hidden'
         }`}
       >
         <button
           onClick={handleCreateChat}
-          className="flex p-3 items-center justify-between w-full hover:bg-blue-700 transition-colors duration-3"
+          className="flex p-3 pl-4 md:pl-6 items-center justify-between w-full hover:bg-slate-700 transition-colors duration-3"
         >
           <span className="text-sm">Create new chat</span>
           <img src={plusIcon} className="w-6 h-6" />
@@ -76,7 +76,7 @@ const Sidenav = () => {
             />
           ))}
         </div>
-        <div className="p-3 mt-auto items-center w-full">
+        <div className="p-3 pl-4 md:pl-6 mt-auto items-center w-full">
           <button onClick={handleWipeButtonClick}>Wipe all data</button>
         </div>
       </div>

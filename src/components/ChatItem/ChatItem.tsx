@@ -36,28 +36,30 @@ const ChatItem = ({
       className={`flex justify-between items-center 
     ${
       chatId === currentChatId
-        ? 'bg-blue-700'
-        : 'bg-blue-800 hover:bg-blue-700 hover:shadow'
+        ? 'bg-slate-700'
+        : 'bg-slate-800 hover:bg-slate-700 hover:shadow'
     }
     transition-colors duration-3 `}
     >
-      <div className="flex justify-between items-center p-3 w-full">
+      <div className="flex justify-between items-center w-full">
         <button
-          className="flex text-ellipsis overflow-hidden whitespace-nowrap max-w-[75%]"
+          className="flex text-ellipsis overflow-hidden p-3 pl-4 md:pl-6 whitespace-nowrap w-full "
           onClick={() => {
             handleLoadChat(chatId)
           }}
         >
           {createdAt}
         </button>
-        <button
-          onClick={() => {
-            void confirmDeletion(chatId)
-          }}
-          className="w-6 h-6"
-        >
-          <img src={binIcon} alt="delete chat" />
-        </button>
+        <div className="flex w-fit mr-3">
+          <button
+            onClick={() => {
+              void confirmDeletion(chatId)
+            }}
+            className="w-6 h-6"
+          >
+            <img src={binIcon} alt="delete chat" />
+          </button>
+        </div>
       </div>
     </div>
   )

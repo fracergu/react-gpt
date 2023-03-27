@@ -65,8 +65,8 @@ const TokenController = ({ inputTokens }: TokenControllerProps) => {
   }, [totalTokens, autoPromptCleanup])
 
   return (
-    <div className="block md:flex md:justify-between">
-      <div>
+    <div className="flex justify-center md:justify-between">
+      <div className="hidden md:inline">
         <span className="mr-2">
           Current prompt tokens:{' '}
           <span

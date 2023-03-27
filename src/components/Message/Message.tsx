@@ -13,21 +13,19 @@ export interface MessageProps {
 }
 
 const Message = ({ message }: MessageProps) => {
-  const diagonalGradient = {
-    backgroundImage:
-      'linear-gradient(to bottom right, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 75%, transparent 75%, transparent)',
-    backgroundSize: '256px 256px',
-  }
   return (
     <div
       data-testid={MessageTestIds.Container}
-      className="relative w-full even:bg-zinc-800 odd:bg-zinc-900"
-      style={message.ignored ? diagonalGradient : {}}
+      className="relative w-full even:bg-slate-800 odd:bg-slate-900"
     >
-      <div className="flex px-4 py-6 w-full md:max-w-[90ch] my-0 mx-auto relative">
+      <div
+        className={`flex px-4 py-6 w-full md:max-w-[90ch] my-0 mx-auto relative ${
+          message.ignored ? 'opacity-50' : ''
+        }`}
+      >
         <div>
           <img
-            className="w-6 h-6 md:mr-6 md:mt-1 top-[15px] md:top-0 absolute md:relative "
+            className="w-6 h-6 md:mr-6 md:mt-1 top-[15px] md:top-0 absolute md:relative"
             src={message.role === Role.USER ? personIcon : robotIcon}
             alt={message.role === Role.USER ? 'user' : 'assistant'}
           />

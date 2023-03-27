@@ -57,21 +57,23 @@ const ChatInput = ({ setInputMessages }: chatInputProps) => {
   }, [currentChat, textareaValue, setInputMessages, dispatch])
 
   return (
-    <div className="relative mt-auto flex px-4 pb-6 w-full justify-center bg-zinc-800 border-t border-zinc-700">
+    <div className="relative mt-auto flex px-4 pb-6 w-full justify-center bg-slate-800 border-t border-slate-700">
       <div className="w-full max-w-[90ch]">
-        <div className="py-3">
+        <div className="py-3 md:pr-[60px]">
           <TokenController inputTokens={currentInputTokens} />
         </div>
         <div className="flex gap-4 w-full max-w-[90ch]">
-          <textarea
-            id="messageInput"
-            className="resize-none w-full focus:outline-none p-2 bg-zinc-700 text-gray-100 rounded-md"
-            placeholder="Type your message here..."
-            value={textareaValue}
-            onChange={handleTextareaChange}
-            onKeyDown={handleTextareaKeyDown}
-            disabled={fetchStatus === FetchStatus.LOADING}
-          />
+          <div className="flex flex-col w-full">
+            <textarea
+              id="messageInput"
+              className="resize-none w-full focus:outline-none p-2 bg-slate-700 text-gray-100 rounded-md"
+              placeholder="Type your message here..."
+              value={textareaValue}
+              onChange={handleTextareaChange}
+              onKeyDown={handleTextareaKeyDown}
+              disabled={fetchStatus === FetchStatus.LOADING}
+            />
+          </div>
           {fetchStatus === FetchStatus.LOADING && <Loader />}
           {fetchStatus !== FetchStatus.LOADING && (
             <button className="p-1" onClick={handleSendMessage}>
