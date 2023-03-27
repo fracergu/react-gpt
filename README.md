@@ -31,10 +31,3 @@ Finally, start the development server with `npm run dev` or build for production
 ## Live Demo
 
 https://fracergu.github.io/react-gpt/
-
-## Changes in sight
-
-- Solve the 2048 API token limit for prompt. As the conversation grows, the API token limit is reached and the conversation stops. This is a limitation of the API. Two possible solutions are:
-  - Remove older messages from the prompt (this will make ChatGPT forget that part of the conversation)
-  - Ask ChatGPT on background to generate a summary of the conversation and use that as the context for the next message. This will make ChatGPT remember the whole conversation but lose details.
-- Implement a system to control the amount of current tokens in the prompt.
