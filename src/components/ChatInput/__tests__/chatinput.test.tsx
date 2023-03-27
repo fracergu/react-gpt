@@ -1,10 +1,6 @@
-import { Role } from '@models/chat.model'
-import { initialState as initialChatsState } from '@redux/chats/chatsSlice'
-import { type RootState } from '@redux/store'
-import { initialState as initialUiState } from '@redux/ui/uiSlice'
-import { fireEvent, screen } from '@testing-library/react'
+import { MOCK_STATE } from '@redux/mocks/state.mock'
+import { screen, fireEvent } from '@testing-library/react'
 import { renderWithProviders } from 'src/utils/test-utils'
-import { getTokenAmount } from 'src/utils/tokens-utils'
 import { vi } from 'vitest'
 
 import ChatInput from '../ChatInput'
@@ -12,40 +8,10 @@ import ChatInput from '../ChatInput'
 describe('ChatInput', () => {
   const setInputMessages = vi.fn()
 
-  const preloadedState: RootState = {
-    chats: {
-      ...initialChatsState,
-      currentChatId: '1',
-      chats: {
-        '1': {
-          id: '1',
-          messages: [
-            {
-              id: '1',
-              role: Role.USER,
-              content: 'Hello',
-              tokens: getTokenAmount('Hello'),
-              ignored: false,
-            },
-            {
-              id: '2',
-              role: Role.ASSISTANT,
-              content: 'Hi there!',
-              tokens: getTokenAmount('Hi there!'),
-              ignored: false,
-            },
-          ],
-          createdAt: Date.now(),
-        },
-      },
-    },
-    ui: initialUiState,
-  }
-
   beforeEach(() => {
     vi.resetAllMocks()
     renderWithProviders(<ChatInput setInputMessages={setInputMessages} />, {
-      preloadedState,
+      preloadedState: MOCK_STATE,
     })
   })
 

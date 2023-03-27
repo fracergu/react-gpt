@@ -1,6 +1,11 @@
 import { FetchStatus } from '@enums/fetchStatus.enum'
 import { type Message, Role } from '@models/chat.model'
-import { addMessage } from '@redux/chats/chatsActions'
+import {
+  APIError,
+  type APIResponseError,
+  NoBodyError,
+} from '@models/errors.model'
+import { addMessage, updateChatFetchError } from '@redux/chats/chatsActions'
 import { selectCurrentChatId } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
 import { selectApiKey } from '@redux/ui/uiSlice'
@@ -95,11 +100,12 @@ export const useStreamCompletion = () => {
         })
 
         if (!response.ok) {
-          const error = await response.json()
-          throw new Error(error.error)
+          const errorData: APIResponseError = await response.json()
+          console.log(errorData)
+          throw new APIError(errorData)
         }
 
-        if (response.body == null) throw new Error('No response body')
+        if (response.body == null) throw new NoBodyError()
 
         const reader = response.body.getReader()
 
@@ -122,20 +128,12 @@ export const useStreamCompletion = () => {
           await read()
         }
         await read()
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        console.log(error)
-        dispatch({
-          type: 'chats/updateChatFetchError',
-          payload: {
-            chatId: currentChatId,
-            error: error.message,
-          },
-        })
-        abortController.abort()
-        return () => {
-          abortController.abort()
+      } catch (error: unknown) {
+        if (error instanceof APIError || error instanceof NoBodyError) {
+          if (currentChatId !== undefined)
+            dispatch(updateChatFetchError(currentChatId, error.message))
         }
+        abortController.abort()
       }
     }
     void fetchData()
