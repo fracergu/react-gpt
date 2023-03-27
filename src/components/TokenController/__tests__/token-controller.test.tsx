@@ -55,11 +55,9 @@ describe('TokenController', () => {
     const checkbox = screen.getByLabelText('Auto prompt clean')
     expect(checkbox).toBeInTheDocument()
 
-    // Uncheck the checkbox
     fireEvent.change(checkbox, { target: { checked: false } })
     expect(checkbox).not.toBeChecked()
 
-    // Check the checkbox
     fireEvent.change(checkbox, { target: { checked: true } })
     expect(checkbox).toBeChecked()
   })

@@ -1,5 +1,5 @@
 import { FetchStatus } from '@enums/fetchStatus.enum'
-import { type Chat, type Chats, type Message } from '@models/chat.model'
+import { type Chat, type Chats, type Message, Role } from '@models/chat.model'
 import { type RootState } from '@redux/store'
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { createSelector } from 'reselect'
@@ -49,6 +49,10 @@ export const chatsSlice = createSlice({
       action: PayloadAction<{ chatId: string; message: Message }>,
     ) => {
       const { chatId, message } = action.payload
+      const lastChatMessage = state.chats[chatId].messages.slice(-1)[0]
+      if (message.role === Role.USER && lastChatMessage?.role === Role.USER) {
+        state.chats[chatId].messages.pop()
+      }
       state.chats[chatId].messages.push(message)
     },
     updateFetchStatus: (state, action: PayloadAction<FetchStatus>) => {
@@ -63,7 +67,7 @@ export const chatsSlice = createSlice({
     },
     updateChatFetchError: (
       state,
-      action: PayloadAction<{ chatId: string; errorMessage: string }>,
+      action: PayloadAction<{ chatId: string; errorMessage?: string }>,
     ) => {
       const { chatId, errorMessage } = action.payload
       state.chats[chatId].fetchError = errorMessage
