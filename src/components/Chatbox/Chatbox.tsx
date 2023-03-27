@@ -31,10 +31,10 @@ const Chatbox = () => {
 
   return (
     <div
-      className="flex flex-col w-full flex-1 items-center"
+      className="flex flex-col w-full flex-1 items-center border-l border-t border-slate-700"
       data-testid={ChatboxTestIds.Container}
     >
-      {currentChat != null && (
+      {currentChat !== undefined && (
         <>
           <div className="flex flex-col w-full overflow-y-auto leading-8">
             {currentChat.messages.map(message => (

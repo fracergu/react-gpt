@@ -40,7 +40,7 @@ const ApiKeyPrompt = ({ updateApiKey }: ApiKeyPromptProps) => {
       data-testid={ApiKeyPromptTestIds.Container}
       className="flex flex-col w-full h-full items-center justify-center p-3"
     >
-      <div className="flex flex-col gap-3 max-w-[90ch] bg-blue-900 p-6 shadow-lg">
+      <div className="flex flex-col gap-3 max-w-[90ch] bg-slate-800 p-6 shadow-lg">
         <h1 className="text-3xl font-semibold text-gray-100">
           No API key found
         </h1>
@@ -52,7 +52,7 @@ const ApiKeyPrompt = ({ updateApiKey }: ApiKeyPromptProps) => {
         <p>
           You can obtain your API key{' '}
           <a
-            className="text-blue-300 font-semibold hover:underline"
+            className="text-blue-500 font-semibold hover:underline"
             href="https://beta.openai.com/account/api-keys"
             rel="noreferrer"
             target="_blank"
@@ -63,14 +63,14 @@ const ApiKeyPrompt = ({ updateApiKey }: ApiKeyPromptProps) => {
         </p>
         <div className="flex gap-3">
           <input
-            className="w-fit focus:outline-none p-2 bg-zinc-800 text-gray-300 rounded-none grow"
+            className="w-fit focus:outline-none p-2 bg-slate-700 text-gray-300 rounded-none grow"
             type="password"
             placeholder="API key"
             value={apiKey}
             onChange={handleApiKeyInputChange}
           />
           <button
-            className="bg-blue-700 text-gray-100 rounded-none p-2 focus:outline-none disabled:opacity-50 disabled:bg-zinc-900 disabled:cursor-not-allowed"
+            className="bg-blue-700 text-gray-100 rounded-none p-2 focus:outline-none disabled:opacity-50 disabled:bg-slate-900 disabled:cursor-not-allowed"
             onClick={handleSetApiKeyButtonClick}
             disabled={!isSetButtonEnabled}
           >

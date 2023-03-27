@@ -14,7 +14,7 @@ function App() {
   return (
     <div
       data-testid={AppTestIds.Container}
-      className="flex flex-col h-screen bg-zinc-900  text-gray-100 transition-all duration-300 ease-in-out"
+      className="flex flex-col h-screen bg-slate-900  text-white transition-all duration-300 ease-in-out"
     >
       <Header />
       {apiKey === null ? (
