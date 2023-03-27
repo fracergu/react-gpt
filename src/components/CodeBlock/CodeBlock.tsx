@@ -1,8 +1,8 @@
 import copyIcon from '@assets/icons/copy.svg'
 import { type ReactNode, useEffect, useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
-import SyntaxHighlighter from 'react-syntax-highlighter'
-import { irBlack } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { irBlack } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 
 export interface CodeBlockProps {
   inline?: boolean
@@ -26,7 +26,7 @@ const CodeBlock = ({ inline = false, match, children }: CodeBlockProps) => {
   }, [copied])
 
   return !inline ? (
-    <div className="my-4" data-testid={CodeBlockTestIds.Container}>
+    <div className="my-4 shadow-md" data-testid={CodeBlockTestIds.Container}>
       <div className="flex items-center text-gray-400 bg-zinc-900 py-2 px-4 justify-between rounded-t-md items-center">
         <span className="font-bold text-xs ">
           {match !== null ? match[1] : ''}
