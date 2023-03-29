@@ -1,7 +1,7 @@
 import copyIcon from '@assets/icons/copy.svg'
 import { type ReactNode, useEffect, useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
-import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
+import SyntaxHighlighter from 'react-syntax-highlighter'
 import { irBlack } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 
 export interface CodeBlockProps {
