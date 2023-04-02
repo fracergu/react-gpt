@@ -9,6 +9,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'happy-dom',
-    setupFiles: ['src/setupTests.ts'],
+    setupFiles: ['src/setupTests.ts', 'src/redux/chats/useChatsStore.ts'],
   },
 })

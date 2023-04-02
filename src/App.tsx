@@ -3,6 +3,7 @@ import Chatbox from '@components/Chatbox/Chatbox'
 import Header from '@components/Header/Header'
 import Sidenav from '@components/Sidenav/Sidenav'
 import { useLocalApiKeyHandler } from '@hooks/useLocalApiKeyHandler'
+import { useChatsStore } from '@redux/chats/useChatsStore'
 
 export const enum AppTestIds {
   Container = 'app-container',
@@ -10,6 +11,11 @@ export const enum AppTestIds {
 
 function App() {
   const { apiKey, setApiKey } = useLocalApiKeyHandler()
+
+  const { currentChat } = useChatsStore(state => ({
+    currentChat:
+      state.currentChat !== null ? state.chats[state.currentChat] : null,
+  }))
 
   return (
     <div
@@ -22,7 +28,7 @@ function App() {
       ) : (
         <div className="flex-1 flex overflow-hidden relative">
           <Sidenav />
-          <Chatbox />
+          {currentChat !== null && <Chatbox chat={currentChat} />}
         </div>
       )}
     </div>

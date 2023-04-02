@@ -1,11 +1,16 @@
 export type Chats = Record<string, Chat>
 
+export type FetchStatus = 'idle' | 'loading' | 'failed'
+
+export type Role = 'assistant' | 'user'
+
 export interface Chat {
   id: string
   messages: Message[]
   createdAt: number
-  incomingMessage?: Message
-  fetchError?: string
+  incomingMessage: Message | null
+  fetchError: string | null
+  fetchStatus: FetchStatus
 }
 
 export interface Message {
@@ -14,9 +19,4 @@ export interface Message {
   content: string
   tokens: number
   ignored: boolean
-}
-
-export enum Role {
-  ASSISTANT = 'assistant',
-  USER = 'user',
 }

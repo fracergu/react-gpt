@@ -1,22 +1,21 @@
 import binIcon from '@assets/icons/bin.svg'
+import { useChatsStore } from '@redux/chats/useChatsStore'
 import Swal from 'sweetalert2'
 
 export interface ChatItemProps {
   chatId: string
   currentChatId: string | undefined
-  handleLoadChat: (chatId: string) => void
-  handleDeleteChat: (chatId: string) => void
   createdAt: string
 }
 
-const ChatItem = ({
-  chatId,
-  currentChatId,
-  handleLoadChat,
-  handleDeleteChat,
-  createdAt,
-}: ChatItemProps) => {
-  const confirmDeletion = async (chatId: string) => {
+const ChatItem = ({ chatId, currentChatId, createdAt }: ChatItemProps) => {
+  const { deleteChat, setCurrentChat } = useChatsStore()
+
+  const handleSetCurrentChat = () => {
+    setCurrentChat(chatId)
+  }
+
+  const handleDeleteChat = async (chatId: string) => {
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: 'This chat will be deleted.',
@@ -27,7 +26,7 @@ const ChatItem = ({
     })
 
     if (result.isConfirmed) {
-      handleDeleteChat(chatId)
+      deleteChat(chatId)
     }
   }
 
@@ -44,16 +43,14 @@ const ChatItem = ({
       <div className="flex justify-between items-center w-full">
         <button
           className="flex text-ellipsis overflow-hidden p-3 pl-4 md:pl-6 whitespace-nowrap w-full "
-          onClick={() => {
-            handleLoadChat(chatId)
-          }}
+          onClick={handleSetCurrentChat}
         >
           {createdAt}
         </button>
         <div className="flex w-fit mr-3">
           <button
             onClick={() => {
-              void confirmDeletion(chatId)
+              void handleDeleteChat(chatId)
             }}
             className="w-6 h-6"
           >

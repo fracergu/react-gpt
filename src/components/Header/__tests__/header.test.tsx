@@ -1,19 +1,21 @@
-import { fireEvent, screen } from '@testing-library/react'
-import { renderWithProviders } from 'src/utils/test-utils'
+import { fireEvent, screen, render } from '@testing-library/react'
 import Swal from 'sweetalert2'
 import { vi } from 'vitest'
 
 import Header, { HeaderTestIds } from '../Header'
 
 const appDispatchMock = vi.fn()
-vi.mock('@redux/hooks', () => ({
-  useAppDispatch: () => appDispatchMock,
-}))
 
 describe('ChatHeader', () => {
+  vi.mock('@redux/ui/useUiStore', () => ({
+    useUiStore: () => ({
+      sidebarOpen: false,
+      toggleSidebar: appDispatchMock,
+    }),
+  }))
+
   beforeEach(() => {
-    vi.resetAllMocks()
-    renderWithProviders(<Header />)
+    render(<Header />)
   })
 
   it('renders header with robot icon and title', () => {
@@ -41,7 +43,7 @@ describe('ChatHeader', () => {
   it('calls handleMenuButtonClick on menu button click', () => {
     const menuButton = screen.getByAltText('menu').closest('button')
     fireEvent.click(menuButton as HTMLElement)
-    expect(appDispatchMock).toHaveBeenCalledWith({ type: 'ui/toggleSidebar' })
+    expect(appDispatchMock).toHaveBeenCalledTimes(1)
   })
 
   it('calls handleInfoButtonClick on info button click', () => {

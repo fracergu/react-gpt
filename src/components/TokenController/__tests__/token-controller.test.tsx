@@ -1,57 +1,51 @@
-import { FetchStatus } from '@enums/fetchStatus.enum'
-import { Role } from '@models/chat.model'
-import { type RootState } from '@redux/store'
-import { fireEvent, screen, cleanup } from '@testing-library/react'
-import { renderWithProviders } from 'src/utils/test-utils'
+import { type Chat } from '@models/chat.model'
+import { CHATS_MOCK } from '@models/mocks/chat.mock'
+import { fireEvent, screen, render } from '@testing-library/react'
+import { vi } from 'vitest'
 
 import TokenController, { TokenControllerTestIds } from '../TokenController'
 
-const generatePreloadedState = (messageTokens: number): RootState => ({
-  chats: {
-    currentChatId: '1',
-    chats: {
-      '1': {
-        id: '1',
-        messages: [
-          {
-            id: '1',
-            role: Role.USER,
-            content: 'test message 1',
-            tokens: messageTokens,
-            ignored: false,
-          },
-        ],
-        createdAt: Date.now(),
-      },
+const generateChatMockWithTokens = (tokens: number): Chat => ({
+  ...CHATS_MOCK['1'],
+  messages: [
+    {
+      ...CHATS_MOCK['1'].messages[0],
+      tokens,
     },
-    fetchStatus: FetchStatus.IDLE,
-  },
-  ui: {
-    sidebarOpen: false,
-    autoPromptCleanup: false,
-  },
+  ],
 })
 
 describe('TokenController', () => {
-  const renderTokenController = (inputTokens: number, totalTokens: number) => {
-    return renderWithProviders(<TokenController inputTokens={inputTokens} />, {
-      preloadedState: generatePreloadedState(totalTokens),
-    })
-  }
+  beforeEach(() => {
+    vi.mock('@redux/ui/useUiStore', () => ({
+      useUiStore: () => ({
+        autoPromptCleanup: true,
+      }),
+    }))
+  })
 
   it('should display the correct number of incoming tokens', () => {
     const inputTokens = 10
-    renderTokenController(inputTokens, 5)
+    render(
+      <TokenController
+        inputTokens={inputTokens}
+        chat={generateChatMockWithTokens(0)}
+      />,
+    )
     expect(screen.getByText(`Input tokens: ${inputTokens}`)).toBeInTheDocument()
   })
 
   it('should display the correct number of prompt tokens', () => {
-    renderTokenController(0, 0)
+    render(
+      <TokenController inputTokens={0} chat={generateChatMockWithTokens(0)} />,
+    )
     expect(screen.getByText(`Current prompt tokens:`)).toBeInTheDocument()
   })
 
   it('should toggle auto prompt clean checkbox', () => {
-    renderTokenController(0, 0)
+    render(
+      <TokenController inputTokens={0} chat={generateChatMockWithTokens(0)} />,
+    )
     const checkbox = screen.getByLabelText('Auto prompt clean')
     expect(checkbox).toBeInTheDocument()
 
@@ -62,32 +56,47 @@ describe('TokenController', () => {
     expect(checkbox).toBeChecked()
   })
 
-  it('should change color based on the percentage of the token usage', () => {
-    renderTokenController(0, 0)
-    const totalTokensGreen = screen.getByTestId(
-      TokenControllerTestIds.TotalTokens,
+  it('should render green color when total tokens is less than 50%', () => {
+    render(
+      <TokenController
+        inputTokens={0}
+        chat={generateChatMockWithTokens(1000)}
+      />,
     )
-    expect(totalTokensGreen).toHaveClass('text-green-500')
-    cleanup()
+    const totalTokens = screen.getByTestId(TokenControllerTestIds.TotalTokens)
+    expect(totalTokens).toHaveClass('text-green-500')
+  })
 
-    renderTokenController(0, 3000)
-    const totalTokensYellow = screen.getByTestId(
-      TokenControllerTestIds.TotalTokens,
+  it('should render yellow color when total tokens is between 50% and 75%', () => {
+    render(
+      <TokenController
+        inputTokens={0}
+        chat={generateChatMockWithTokens(3000)}
+      />,
     )
-    expect(totalTokensYellow).toHaveClass('text-yellow-500')
-    cleanup()
+    const totalTokens = screen.getByTestId(TokenControllerTestIds.TotalTokens)
+    expect(totalTokens).toHaveClass('text-yellow-500')
+  })
 
-    renderTokenController(0, 3500)
-    const totalTokensOrange = screen.getByTestId(
-      TokenControllerTestIds.TotalTokens,
+  it('should render orange color when total tokens is between 75% and 90%', () => {
+    render(
+      <TokenController
+        inputTokens={0}
+        chat={generateChatMockWithTokens(3500)}
+      />,
     )
-    expect(totalTokensOrange).toHaveClass('text-orange-500')
-    cleanup()
+    const totalTokens = screen.getByTestId(TokenControllerTestIds.TotalTokens)
+    expect(totalTokens).toHaveClass('text-orange-500')
+  })
 
-    renderTokenController(0, 4000)
-    const totalTokensRed = screen.getByTestId(
-      TokenControllerTestIds.TotalTokens,
+  it('should render red color when total tokens is greater than 90%', () => {
+    render(
+      <TokenController
+        inputTokens={0}
+        chat={generateChatMockWithTokens(4000)}
+      />,
     )
-    expect(totalTokensRed).toHaveClass('text-red-500')
+    const totalTokens = screen.getByTestId(TokenControllerTestIds.TotalTokens)
+    expect(totalTokens).toHaveClass('text-red-500')
   })
 })

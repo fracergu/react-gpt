@@ -1,61 +1,71 @@
-import { screen, fireEvent, waitFor } from '@testing-library/react'
+import { screen, fireEvent, waitFor, render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import { renderWithProviders } from 'src/utils/test-utils'
 import Swal from 'sweetalert2'
 import { vi } from 'vitest'
 
 import Sidenav from '../Sidenav'
 
-const appDispatchMock = vi.fn()
-
-vi.mock('@redux/hooks', () => ({
-  useAppSelector: (selector: any) => selector(),
-  useAppDispatch: () => appDispatchMock,
-}))
-
-const mockChats = {
-  'chat-1': { createdAt: '2023-03-25T12:00:00' },
-  'chat-2': { createdAt: '2023-03-25T12:01:00' },
-}
-
-vi.mock('@redux/chats/chatsSlice', async () => {
-  const actual: any = await vi.importActual('@redux/chats/chatsSlice')
-  return {
-    ...actual,
-    selectChats: () => mockChats,
-    selectCurrentChat: () => ({ id: 'chat-1' }),
-    selectFetchStatus: () => 'idle',
-  }
-})
-
-vi.mock('@redux/ui/uiSlice', async () => {
-  const actual: any = await vi.importActual('@redux/ui/uiSlice')
-  return {
-    ...actual,
-    selectSidebarOpen: () => true,
-  }
-})
-
 const mockCreateChat = vi.fn()
 const mockLoadChat = vi.fn()
 
-vi.mock('@redux/chats/chatsActions', async () => {
-  const actual: any = await vi.importActual('@redux/chats/chatsActions')
-  return {
-    ...actual,
-    createChat: () => mockCreateChat,
-    loadChat: () => mockLoadChat,
-  }
-})
+vi.mock('@redux/ui/useUiStore', () => ({
+  useUiStore: () => ({
+    autoPromptCleanup: false,
+    toggleAutoPromptCleanup: vi.fn(),
+  }),
+}))
+
+vi.mock('@redux/chats/useChatsStore', () => ({
+  useChatsStore: () => ({
+    currentChat: {
+      id: '1',
+      messages: [
+        {
+          id: '1',
+          role: 'user',
+          content: 'test message 1',
+          tokens: 10,
+          ignored: false,
+        },
+      ],
+      createdAt: new Date('2021-01-01T00:00:00').getTime(),
+    },
+    chats: {
+      '1': {
+        id: '1',
+        messages: [
+          {
+            id: '1',
+            role: 'user',
+            content: 'test message 1',
+            tokens: 10,
+            ignored: false,
+          },
+        ],
+        createdAt: new Date('2021-01-01T00:00:00').getTime(),
+      },
+      '2': {
+        id: '2',
+        messages: [
+          {
+            id: '1',
+            role: 'user',
+            content: 'test message 1',
+            tokens: 10,
+            ignored: false,
+          },
+        ],
+        createdAt: new Date('2021-01-01T01:00:00').getTime(),
+      },
+    },
+    createChat: mockCreateChat,
+    setCurrentChat: mockLoadChat,
+  }),
+}))
 
 describe('Sidenav', () => {
   beforeEach(() => {
-    renderWithProviders(<Sidenav />)
-  })
-
-  afterEach(() => {
-    vi.clearAllMocks()
-    vi.restoreAllMocks()
+    render(<Sidenav />)
   })
 
   it('renders the create new chat button', () => {
@@ -67,7 +77,7 @@ describe('Sidenav', () => {
 
   it('renders the chat items', () => {
     const chatItems = screen.getAllByRole('button', {
-      name: /\d{1,2}\/\d{1,2}\/\d{4}, \d{2}:\d{2}:\d{2}/,
+      name: /^\d{1,2}\/\d{1,2}\/\d{4}, \d{1,2}:\d{2}:\d{2}$/,
     })
     expect(chatItems).toHaveLength(2)
   })
@@ -77,17 +87,15 @@ describe('Sidenav', () => {
       name: 'Create new chat',
     })
     fireEvent.click(createChatButton)
-
-    expect(appDispatchMock).toHaveBeenCalledTimes(1)
-    expect(appDispatchMock).toHaveBeenCalledWith(mockCreateChat)
+    expect(mockCreateChat).toHaveBeenCalledTimes(1)
   })
 
   it('invokes dispatch with loadChat action on chat item click', () => {
-    const chatItem = screen.getByRole('button', { name: '25/3/2023, 12:00:00' })
+    const chatItem = screen.getByRole('button', {
+      name: '1/1/2021, 0:00:00',
+    })
     fireEvent.click(chatItem)
-
-    expect(appDispatchMock).toHaveBeenCalledTimes(1)
-    expect(appDispatchMock).toHaveBeenCalledWith(mockLoadChat)
+    expect(mockLoadChat).toHaveBeenCalledTimes(1)
   })
 
   it('renders the wipe all data button', () => {

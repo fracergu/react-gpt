@@ -1,7 +1,5 @@
-import { MOCK_STATE } from '@redux/mocks/state.mock'
-import { type RootState } from '@redux/store'
-import { fireEvent, screen } from '@testing-library/react'
-import { renderWithProviders } from 'src/utils/test-utils'
+import { CHATS_MOCK } from '@models/mocks/chat.mock'
+import { fireEvent, screen, render } from '@testing-library/react'
 import { vi } from 'vitest'
 
 import RegenerateResponse, {
@@ -10,14 +8,18 @@ import RegenerateResponse, {
 
 describe('RegenerateResponse', () => {
   const setInputMessagesMock = vi.fn()
+  const CHAT_MOCK = CHATS_MOCK['1']
 
   beforeEach(() => {
     setInputMessagesMock.mockClear()
   })
 
   it('renders the regenerate response container', () => {
-    renderWithProviders(
-      <RegenerateResponse setInputMessages={setInputMessagesMock} />,
+    render(
+      <RegenerateResponse
+        setInputMessages={setInputMessagesMock}
+        chat={CHAT_MOCK}
+      />,
     )
     expect(
       screen.getByTestId(RegenerateResponseTestIds.Container),
@@ -25,30 +27,21 @@ describe('RegenerateResponse', () => {
   })
 
   it('displays the error message', () => {
-    renderWithProviders(
-      <RegenerateResponse setInputMessages={setInputMessagesMock} />,
+    render(
+      <RegenerateResponse
+        setInputMessages={setInputMessagesMock}
+        chat={CHAT_MOCK}
+      />,
     )
     expect(screen.getByText(/Something went wrong/)).toBeInTheDocument()
   })
 
   it('renders the regenerate response button and triggers setInputMessages', () => {
-    const preloadedState: RootState = {
-      ...MOCK_STATE,
-      chats: {
-        ...MOCK_STATE.chats,
-        currentChatId: '1',
-        chats: {
-          '1': {
-            ...MOCK_STATE.chats.chats['1'],
-            fetchError: 'Error',
-          },
-        },
-      },
-    }
-
-    renderWithProviders(
-      <RegenerateResponse setInputMessages={setInputMessagesMock} />,
-      { preloadedState },
+    render(
+      <RegenerateResponse
+        setInputMessages={setInputMessagesMock}
+        chat={CHAT_MOCK}
+      />,
     )
     const regenerateButton = screen.getByText(/Regenerate response/)
     expect(regenerateButton).toBeInTheDocument()

@@ -1,17 +1,15 @@
-import { FetchStatus } from '@enums/fetchStatus.enum'
-import { type Message, Role } from '@models/chat.model'
+import { type Message } from '@models/chat.model'
 import {
   APIError,
   type APIResponseError,
   NoBodyError,
 } from '@models/errors.model'
-import { addMessage, updateChatFetchError } from '@redux/chats/chatsActions'
-import { selectCurrentChatId } from '@redux/chats/chatsSlice'
-import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { selectApiKey } from '@redux/ui/uiSlice'
+import { useChatsStore } from '@redux/chats/useChatsStore'
+import { useUiStore } from '@redux/ui/useUiStore'
 import { useEffect, useState } from 'react'
 import { getTokenAmount } from 'src/utils/tokens-utils'
 import { v4 as uuid } from 'uuid'
+import { shallow } from 'zustand/shallow'
 
 const API_URL = 'https://api.openai.com/v1/chat/completions'
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY
@@ -36,10 +34,20 @@ const decodeResponse = (response?: Uint8Array) => {
 }
 
 export const useStreamCompletion = () => {
-  const apiKey: string =
-    OPENAI_API_KEY ?? useAppSelector(selectApiKey) ?? undefined
-  const dispatch = useAppDispatch()
-  const currentChatId = useAppSelector(selectCurrentChatId)
+  const { currentChat } = useChatsStore(
+    state => ({
+      currentChat:
+        state.currentChat !== null ? state.chats[state.currentChat] : null,
+    }),
+    shallow,
+  )
+
+  const { addMessage, setFetchError, setFetchStatus, setIncomingMessage } =
+    useChatsStore(state => state, shallow)
+
+  const { apiKey: storeApiKey } = useUiStore()
+
+  const apiKey: string = OPENAI_API_KEY ?? storeApiKey ?? null
   const [inputMessages, setInputMessages] = useState<Message[]>([])
   const abortController = new AbortController()
 
@@ -47,23 +55,18 @@ export const useStreamCompletion = () => {
     if (inputMessages.length === 0) return
 
     const onText = (text: string, isDone = false) => {
+      if (currentChat === null) return
       const message: Message = {
         id: isDone ? uuid() : '-1',
-        role: Role.ASSISTANT,
+        role: 'assistant',
         content: text,
         tokens: getTokenAmount(text),
         ignored: false,
       }
-      dispatch({
-        type: 'chats/updateChatIncomingMessage',
-        payload: { chatId: currentChatId, message: isDone ? null : message },
-      })
-      if (isDone && currentChatId !== undefined) {
-        dispatch({
-          type: 'chats/updateFetchStatus',
-          payload: FetchStatus.IDLE,
-        })
-        dispatch(addMessage(currentChatId, message))
+      setIncomingMessage(currentChat.id, message)
+      if (isDone) {
+        addMessage(currentChat.id, message)
+        setFetchStatus(currentChat.id, 'idle')
       }
     }
 
@@ -79,10 +82,9 @@ export const useStreamCompletion = () => {
     }
 
     const fetchData = async () => {
-      dispatch({
-        type: 'chats/updateFetchStatus',
-        payload: FetchStatus.LOADING,
-      })
+      if (currentChat === null) return
+
+      setFetchStatus(currentChat.id, 'loading')
 
       try {
         const response = await fetch(API_URL, {
@@ -101,7 +103,6 @@ export const useStreamCompletion = () => {
 
         if (!response.ok) {
           const errorData: APIResponseError = await response.json()
-          console.log(errorData)
           throw new APIError(errorData)
         }
 
@@ -130,8 +131,7 @@ export const useStreamCompletion = () => {
         await read()
       } catch (error: unknown) {
         if (error instanceof APIError || error instanceof NoBodyError) {
-          if (currentChatId !== undefined)
-            dispatch(updateChatFetchError(currentChatId, error.message))
+          setFetchError(currentChat.id, error.message)
         }
         abortController.abort()
       }

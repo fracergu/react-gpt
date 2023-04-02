@@ -1,8 +1,8 @@
-import { useAppDispatch } from '@redux/hooks'
+import { useUiStore } from '@redux/ui/useUiStore'
 import { useEffect, useState } from 'react'
 
 export const useLocalApiKeyHandler = () => {
-  const dispatch = useAppDispatch()
+  const { setApiKey: dispatchSetApiKey } = useUiStore()
 
   const getApiKeyFromLocalStorage = () => {
     const ui = localStorage.getItem('ui')
@@ -20,10 +20,7 @@ export const useLocalApiKeyHandler = () => {
 
   useEffect(() => {
     if (apiKey === null || envApiKey === null) return
-    dispatch({
-      type: 'ui/setApiKey',
-      payload: apiKey,
-    })
+    dispatchSetApiKey(apiKey)
   }, [apiKey])
 
   return {

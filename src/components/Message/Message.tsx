@@ -1,7 +1,7 @@
 import personIcon from '@assets/icons/person.svg'
 import robotIcon from '@assets/icons/robot.svg'
 import CodeBlock from '@components/CodeBlock/CodeBlock'
-import { type Message as MessageModel, Role } from '@models/chat.model'
+import { type Message as MessageModel } from '@models/chat.model'
 import ReactMarkdown from 'react-markdown'
 
 export enum MessageTestIds {
@@ -26,8 +26,8 @@ const Message = ({ message }: MessageProps) => {
         <div>
           <img
             className="w-6 h-6 md:mr-6 md:mt-1 top-[15px] md:top-0 absolute md:relative"
-            src={message.role === Role.USER ? personIcon : robotIcon}
-            alt={message.role === Role.USER ? 'user' : 'assistant'}
+            src={message.role === 'user' ? personIcon : robotIcon}
+            alt={message.role === 'user' ? 'user' : 'assistant'}
           />
         </div>
         <div className="w-full pt-5 md:pt-0 md:w-[calc(100%-50px)]">

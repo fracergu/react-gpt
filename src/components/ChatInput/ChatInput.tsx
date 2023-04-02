@@ -1,25 +1,19 @@
 import sendIcon from '@assets/icons/send.svg'
 import Loader from '@components/Loader/Loader'
 import TokenController from '@components/TokenController/TokenController'
-import { FetchStatus } from '@enums/fetchStatus.enum'
-import { type Message, Role } from '@models/chat.model'
-import { addMessage } from '@redux/chats/chatsActions'
-import { selectCurrentChat, selectFetchStatus } from '@redux/chats/chatsSlice'
-import { useAppDispatch, useAppSelector } from '@redux/hooks'
+import { type Chat, type Message, type Role } from '@models/chat.model'
+import { useChatsStore } from '@redux/chats/useChatsStore'
 import { useCallback, useState } from 'react'
 import { getTokenAmount } from 'src/utils/tokens-utils'
 import { v4 as uuid } from 'uuid'
 
 interface chatInputProps {
+  chat: Chat
   setInputMessages: (messages: Message[]) => void
 }
 
-const ChatInput = ({ setInputMessages }: chatInputProps) => {
-  const dispatch = useAppDispatch()
-
-  const currentChat = useAppSelector(selectCurrentChat)
-  const fetchStatus = useAppSelector(selectFetchStatus)
-
+const ChatInput = ({ setInputMessages, chat }: chatInputProps) => {
+  const { addMessage } = useChatsStore()
   const [textareaValue, setTextareaValue] = useState('')
   const [currentInputTokens, setCurrentInputTokens] = useState<number>(0)
 
@@ -41,26 +35,25 @@ const ChatInput = ({ setInputMessages }: chatInputProps) => {
   }
 
   const handleSendMessage = useCallback(() => {
-    if (textareaValue.length === 0 || currentChat == null) return
+    if (textareaValue.length === 0) return
     const newMessage = {
       id: uuid(),
-      role: Role.USER,
+      role: 'user' as Role,
       content: textareaValue,
       tokens: currentInputTokens,
       ignored: false,
     }
 
-    dispatch(addMessage(currentChat.id, newMessage))
-
+    addMessage(chat.id, newMessage)
     setTextareaValue('')
-    setInputMessages([...currentChat.messages, newMessage])
-  }, [currentChat, textareaValue, setInputMessages, dispatch])
+    setInputMessages([...chat.messages, newMessage])
+  }, [chat, textareaValue, setInputMessages, addMessage])
 
   return (
     <div className="relative mt-auto flex px-4 pb-6 w-full justify-center bg-slate-800 border-t border-slate-700">
       <div className="w-full max-w-[90ch]">
         <div className="py-3 md:pr-[60px]">
-          <TokenController inputTokens={currentInputTokens} />
+          <TokenController inputTokens={currentInputTokens} chat={chat} />
         </div>
         <div className="flex gap-4 w-full max-w-[90ch]">
           <div className="flex flex-col w-full">
@@ -71,11 +64,11 @@ const ChatInput = ({ setInputMessages }: chatInputProps) => {
               value={textareaValue}
               onChange={handleTextareaChange}
               onKeyDown={handleTextareaKeyDown}
-              disabled={fetchStatus === FetchStatus.LOADING}
+              disabled={chat.fetchStatus === 'loading'}
             />
           </div>
-          {fetchStatus === FetchStatus.LOADING && <Loader />}
-          {fetchStatus !== FetchStatus.LOADING && (
+          {chat.fetchStatus === 'loading' && <Loader />}
+          {chat.fetchStatus !== 'loading' && (
             <button className="p-1" onClick={handleSendMessage}>
               <img className="w-10 h-10" src={sendIcon} alt="send" />
             </button>

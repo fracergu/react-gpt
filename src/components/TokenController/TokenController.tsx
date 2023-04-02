@@ -1,12 +1,10 @@
-import { type Message } from '@models/chat.model'
-import { ignoreNextTailMessage } from '@redux/chats/chatsActions'
-import { selectCurrentChat } from '@redux/chats/chatsSlice'
-import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { toggleAutoPromptCleanup } from '@redux/ui/uiActions'
-import { selectAutoPromptCleanup } from '@redux/ui/uiSlice'
+import { type Chat, type Message } from '@models/chat.model'
+import { useChatsStore } from '@redux/chats/useChatsStore'
+import { useUiStore } from '@redux/ui/useUiStore'
 import { useEffect, useMemo, useState } from 'react'
 
 export interface TokenControllerProps {
+  chat: Chat
   inputTokens: number
 }
 
@@ -20,22 +18,20 @@ const calculateChatTokens = (messages: Message[]) => {
     .reduce((acc, message) => acc + message.tokens, 0)
 }
 
-const TokenController = ({ inputTokens }: TokenControllerProps) => {
+const TokenController = ({ inputTokens, chat }: TokenControllerProps) => {
   const MAX_PROMPT_TOKENS = 4096
 
-  const dispatch = useAppDispatch()
+  const { setNextTailMessageIgnored } = useChatsStore()
+  const { autoPromptCleanup, toggleAutoPromptCleanup } = useUiStore()
 
-  const currentChat = useAppSelector(selectCurrentChat)
   const [colourClass, setColourClass] = useState('text-green-500')
 
-  const autoPromptCleanup = useAppSelector(selectAutoPromptCleanup)
-
   const currentChatIncomingMessageTokens =
-    currentChat?.incomingMessage?.tokens ?? 0
+    chat.incomingMessage !== null ? chat.incomingMessage.tokens : 0
 
   const currentChatTokens = useMemo(() => {
-    return calculateChatTokens(currentChat?.messages ?? [])
-  }, [currentChat?.messages])
+    return calculateChatTokens(chat.messages ?? [])
+  }, [chat.messages])
 
   const totalTokens = currentChatIncomingMessageTokens + currentChatTokens
 
@@ -49,18 +45,10 @@ const TokenController = ({ inputTokens }: TokenControllerProps) => {
     return 'text-green-500'
   }
 
-  const handleAutoCleanPromptChange = () => {
-    dispatch(toggleAutoPromptCleanup())
-  }
-
   useEffect(() => {
     setColourClass(getColourClass())
-    if (
-      Boolean(autoPromptCleanup) &&
-      totalTokens >= MAX_PROMPT_TOKENS &&
-      currentChat !== undefined
-    ) {
-      dispatch(ignoreNextTailMessage(currentChat.id))
+    if (Boolean(autoPromptCleanup) && totalTokens >= MAX_PROMPT_TOKENS) {
+      setNextTailMessageIgnored(chat.id)
     }
   }, [totalTokens, autoPromptCleanup])
 
@@ -83,7 +71,9 @@ const TokenController = ({ inputTokens }: TokenControllerProps) => {
           type="checkbox"
           id="cleanPromptCheckbox"
           className="mr-2"
-          onChange={handleAutoCleanPromptChange}
+          onChange={() => {
+            toggleAutoPromptCleanup()
+          }}
           checked={autoPromptCleanup}
         />
         <label htmlFor="cleanPromptCheckbox">Auto prompt clean</label>

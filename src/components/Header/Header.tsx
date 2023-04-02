@@ -2,7 +2,7 @@ import githubIcon from '@assets/icons/github.svg'
 import hamburgerIcon from '@assets/icons/hamburger.svg'
 import infoIcon from '@assets/icons/info.svg'
 import robotIcon from '@assets/icons/robot.svg'
-import { useAppDispatch } from '@redux/hooks'
+import { useUiStore } from '@redux/ui/useUiStore'
 import Swal from 'sweetalert2'
 
 export enum HeaderTestIds {
@@ -10,10 +10,10 @@ export enum HeaderTestIds {
 }
 
 const Header = () => {
-  const dispatch = useAppDispatch()
+  const { toggleSidebar } = useUiStore()
 
   const handleMenuButtonClick = () => {
-    dispatch({ type: 'ui/toggleSidebar' })
+    toggleSidebar()
   }
 
   const handleInfoButtonClick = () => {
