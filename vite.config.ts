@@ -6,6 +6,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 export default defineConfig({
   base: './',
   plugins: [react(), tsconfigPaths()],
+  publicDir: 'public',
   test: {
     globals: true,
     environment: 'happy-dom',
