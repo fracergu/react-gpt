@@ -1,7 +1,7 @@
 import { FetchStatus } from '@enums/fetchStatus.enum'
 import { Role } from '@models/chat.model'
 import { type RootState } from '@redux/store'
-import { fireEvent, screen, cleanup } from '@testing-library/react'
+import { screen, cleanup } from '@testing-library/react'
 import { renderWithProviders } from 'src/utils/test-utils'
 
 import TokenController, { TokenControllerTestIds } from '../TokenController'
@@ -28,7 +28,6 @@ const generatePreloadedState = (messageTokens: number): RootState => ({
   },
   ui: {
     sidebarOpen: false,
-    autoPromptCleanup: false,
   },
 })
 
@@ -48,18 +47,6 @@ describe('TokenController', () => {
   it('should display the correct number of prompt tokens', () => {
     renderTokenController(0, 0)
     expect(screen.getByText(`Current prompt tokens:`)).toBeInTheDocument()
-  })
-
-  it('should toggle auto prompt clean checkbox', () => {
-    renderTokenController(0, 0)
-    const checkbox = screen.getByLabelText('Auto prompt clean')
-    expect(checkbox).toBeInTheDocument()
-
-    fireEvent.change(checkbox, { target: { checked: false } })
-    expect(checkbox).not.toBeChecked()
-
-    fireEvent.change(checkbox, { target: { checked: true } })
-    expect(checkbox).toBeChecked()
   })
 
   it('should change color based on the percentage of the token usage', () => {

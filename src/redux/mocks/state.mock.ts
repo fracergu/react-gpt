@@ -32,6 +32,5 @@ export const MOCK_STATE: RootState = {
   ui: {
     sidebarOpen: true,
     apiKey: 'sk-012345678901234567890123456789012345678901234567',
-    autoPromptCleanup: true,
   },
 }

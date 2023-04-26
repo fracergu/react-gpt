@@ -2,8 +2,6 @@ import { type Message } from '@models/chat.model'
 import { ignoreNextTailMessage } from '@redux/chats/chatsActions'
 import { selectCurrentChat } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { toggleAutoPromptCleanup } from '@redux/ui/uiActions'
-import { selectAutoPromptCleanup } from '@redux/ui/uiSlice'
 import { useEffect, useMemo, useState } from 'react'
 
 export interface TokenControllerProps {
@@ -28,8 +26,6 @@ const TokenController = ({ inputTokens }: TokenControllerProps) => {
   const currentChat = useAppSelector(selectCurrentChat)
   const [colourClass, setColourClass] = useState('text-green-500')
 
-  const autoPromptCleanup = useAppSelector(selectAutoPromptCleanup)
-
   const currentChatIncomingMessageTokens =
     currentChat?.incomingMessage?.tokens ?? 0
 
@@ -49,20 +45,12 @@ const TokenController = ({ inputTokens }: TokenControllerProps) => {
     return 'text-green-500'
   }
 
-  const handleAutoCleanPromptChange = () => {
-    dispatch(toggleAutoPromptCleanup())
-  }
-
   useEffect(() => {
     setColourClass(getColourClass())
-    if (
-      Boolean(autoPromptCleanup) &&
-      totalTokens >= MAX_PROMPT_TOKENS &&
-      currentChat !== undefined
-    ) {
+    if (totalTokens >= MAX_PROMPT_TOKENS && currentChat !== undefined) {
       dispatch(ignoreNextTailMessage(currentChat.id))
     }
-  }, [totalTokens, autoPromptCleanup])
+  }, [totalTokens])
 
   return (
     <div className="flex justify-center md:justify-between">
@@ -77,16 +65,6 @@ const TokenController = ({ inputTokens }: TokenControllerProps) => {
           </span>
         </span>
         <span>Input tokens: {inputTokens}</span>
-      </div>
-      <div>
-        <input
-          type="checkbox"
-          id="cleanPromptCheckbox"
-          className="mr-2"
-          onChange={handleAutoCleanPromptChange}
-          checked={autoPromptCleanup}
-        />
-        <label htmlFor="cleanPromptCheckbox">Auto prompt clean</label>
       </div>
     </div>
   )
