@@ -12,35 +12,34 @@ export interface CodeBlockProps {
 
 export enum CodeBlockTestIds {
   Container = 'code-block-container',
+  InlineCodeBlock = 'inline-code-block',
 }
 
 const CodeBlock = ({ inline = false, match, children }: CodeBlockProps) => {
-  const [copied, setCopied] = useState(false)
+  const [copiedText, setCopiedText] = useState(false)
 
   useEffect(() => {
-    if (copied) {
+    if (copiedText) {
       setTimeout(() => {
-        setCopied(false)
+        setCopiedText(false)
       }, 2500)
     }
-  }, [copied])
+  }, [copiedText])
 
   return !inline ? (
     <div className="my-4 shadow-md" data-testid={CodeBlockTestIds.Container}>
       <div className="flex items-center text-gray-400 bg-slate-900 py-2 px-4 justify-between rounded-t-md items-center">
-        <span className="font-bold text-xs ">
-          {match !== null ? match[1] : ''}
-        </span>
+        <span className="font-bold text-xs ">{match?.[1]}</span>
         <CopyToClipboard
           text={String(children).replace(/\n$/, '')}
           onCopy={() => {
-            setCopied(true)
+            setCopiedText(true)
           }}
         >
           <div className="flex items-center justify-center">
-            <div className="text-xs text-gray-400 mr-2">
-              {copied ? 'Copied!' : ''}
-            </div>
+            {copiedText && (
+              <div className="text-xs text-gray-400 mr-2">Copied!</div>
+            )}
             <button className="text-gray-400">
               <img src={copyIcon} alt="copy" className="w-4 h-4" />
             </button>
@@ -51,7 +50,7 @@ const CodeBlock = ({ inline = false, match, children }: CodeBlockProps) => {
         <SyntaxHighlighter
           style={highlightTheme}
           className="!whitespace-pre !px-4 !py-2"
-          language={match !== null ? match[1] : ''}
+          language={match?.[1]}
           PreTag="div"
         >
           {String(children).replace(/\n$/, '')}
@@ -59,7 +58,10 @@ const CodeBlock = ({ inline = false, match, children }: CodeBlockProps) => {
       </div>
     </div>
   ) : (
-    <code className="bg-slate-900 text-gray-400 py-1 px-2 rounded-md mb-1">
+    <code
+      data-testid={CodeBlockTestIds.InlineCodeBlock}
+      className="bg-slate-900 text-gray-400 py-1 px-2 rounded-md mb-1"
+    >
       {children}
     </code>
   )

@@ -35,7 +35,9 @@
         "no-restricted-imports": "off",
         "@typescript-eslint/no-restricted-imports": "off",
         "@typescript-eslint/no-unnecessary-type-assertion": "off",
-        "sort-imports": "off"
+        "sort-imports": "off",
+        "@typescript-eslint/await-thenable": "off",
+        "@typescript-eslint/no-confusing-void-expression": "off"
       }
     }
   ],

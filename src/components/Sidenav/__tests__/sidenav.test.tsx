@@ -4,7 +4,7 @@ import { renderWithProviders } from 'src/utils/test-utils'
 import Swal from 'sweetalert2'
 import { vi } from 'vitest'
 
-import Sidenav from '../Sidenav'
+import Sidenav, { SidenavTestIds } from '../Sidenav'
 
 const appDispatchMock = vi.fn()
 
@@ -38,6 +38,8 @@ vi.mock('@redux/ui/uiSlice', async () => {
 
 const mockCreateChat = vi.fn()
 const mockLoadChat = vi.fn()
+const mockDeleteChat = vi.fn()
+const mockSetSidebarOpen = vi.fn()
 
 vi.mock('@redux/chats/chatsActions', async () => {
   const actual: any = await vi.importActual('@redux/chats/chatsActions')
@@ -45,6 +47,15 @@ vi.mock('@redux/chats/chatsActions', async () => {
     ...actual,
     createChat: () => mockCreateChat,
     loadChat: () => mockLoadChat,
+    deleteChat: () => mockDeleteChat,
+  }
+})
+
+vi.mock('@redux/ui/uiActions', async () => {
+  const actual: any = await vi.importActual('@redux/ui/uiActions')
+  return {
+    ...actual,
+    setSidebarOpen: () => mockSetSidebarOpen,
   }
 })
 
@@ -123,5 +134,38 @@ describe('Sidenav', () => {
       expect(spyWindowReload).toHaveBeenCalledTimes(1)
     })
     swalFireSpy.mockRestore()
+  })
+
+  it('opens delete chat dialog on chat item delete button click', async () => {
+    const spy = vi.spyOn(Swal, 'fire')
+    const deleteChatButton = await screen.findAllByRole('button', {
+      name: 'delete chat',
+    })
+    fireEvent.click(deleteChatButton[0])
+    expect(spy).toHaveBeenCalledTimes(1)
+  })
+
+  it('invokes dispatch with deleteChat action on delete chat dialog confirm', async () => {
+    const spy = vi.spyOn(Swal, 'fire').mockResolvedValue({
+      isConfirmed: true,
+      isDenied: false,
+      isDismissed: false,
+    })
+    const deleteChatButton = await screen.findAllByRole('button', {
+      name: 'delete chat',
+    })
+    fireEvent.click(deleteChatButton[0])
+    await waitFor(() => {
+      expect(appDispatchMock).toHaveBeenCalledTimes(1)
+      expect(appDispatchMock).toHaveBeenCalledWith(mockDeleteChat)
+    })
+    spy.mockRestore()
+  })
+
+  it('backdrop click should dispatch closeSidebar action', () => {
+    const backdrop = screen.getByTestId(SidenavTestIds.Backdrop)
+    fireEvent.click(backdrop)
+    expect(appDispatchMock).toHaveBeenCalledTimes(1)
+    expect(appDispatchMock).toHaveBeenCalledWith(mockSetSidebarOpen)
   })
 })

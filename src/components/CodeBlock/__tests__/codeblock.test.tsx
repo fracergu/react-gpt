@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react'
+import { act } from 'react-dom/test-utils'
 import { vi } from 'vitest'
 
 import CodeBlock, { CodeBlockTestIds } from '../CodeBlock'
@@ -50,8 +51,9 @@ describe('CodeBlock', () => {
     )
 
     const copyButton = screen.getByRole('button', { name: 'copy' })
-    fireEvent.click(copyButton)
-
+    act(() => {
+      fireEvent.click(copyButton)
+    })
     const copiedMessage = await screen.findByText('Copied!')
     expect(copiedMessage).toBeInTheDocument()
 
@@ -59,5 +61,25 @@ describe('CodeBlock', () => {
       const clipboardText = await navigator.clipboard.readText()
       expect(clipboardText).toBe(codeContent.replace(/\n$/, ''))
     }
+  })
+
+  it('removes "Copied!" message after timeout', async () => {
+    vi.useFakeTimers()
+    const match = createRegExpExecArray(['', 'javascript'])
+    render(
+      <CodeBlock inline={false} match={match}>
+        {codeContent}
+      </CodeBlock>,
+    )
+
+    const copyButton = screen.getByRole('button')
+    fireEvent.click(copyButton)
+    const copiedMessage = screen.getByText('Copied!')
+    expect(copiedMessage).toBeInTheDocument()
+    act(() => {
+      vi.runAllTimers()
+    })
+    expect(copiedMessage).not.toBeInTheDocument()
+    vi.restoreAllMocks()
   })
 })

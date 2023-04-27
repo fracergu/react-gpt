@@ -1,3 +1,4 @@
+import { CodeBlockTestIds } from '@components/CodeBlock/CodeBlock'
 import { Role, type Message as MessageModel } from '@models/chat.model'
 import { render, screen } from '@testing-library/react'
 import { getTokenAmount } from 'src/utils/tokens-utils'
@@ -66,5 +67,43 @@ describe('Message', () => {
       return nodeHasText && childrenDontHaveText
     })
     expect(content).toBeInTheDocument()
+  })
+
+  it('renders ignored message with opacity', () => {
+    render(<Message message={{ ...messageUser, ignored: true }} />)
+
+    const messageContainer = screen.getByTestId(MessageTestIds.MessageWrapper)
+    expect(messageContainer).toBeInTheDocument()
+    expect(messageContainer).toHaveClass('opacity-50')
+  })
+
+  it('renders message with code block', () => {
+    render(
+      <Message
+        message={{
+          ...messageUser,
+          content: `
+            \`\`\`js
+              console.log("Hello world!")
+            \`\`\`
+          `,
+        }}
+      />,
+    )
+    const codeBlock = screen.getByTestId(CodeBlockTestIds.Container)
+    expect(codeBlock).toBeInTheDocument()
+  })
+
+  it('renders message with inline code block', () => {
+    render(
+      <Message
+        message={{
+          ...messageUser,
+          content: '`npm install`',
+        }}
+      />,
+    )
+    const codeBlock = screen.getByTestId(CodeBlockTestIds.InlineCodeBlock)
+    expect(codeBlock).toBeInTheDocument()
   })
 })

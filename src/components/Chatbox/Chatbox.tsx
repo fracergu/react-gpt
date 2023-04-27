@@ -31,7 +31,7 @@ const Chatbox = () => {
 
   return (
     <div
-      className="flex flex-col w-full flex-1 items-center border-l border-t border-slate-700"
+      className="flex flex-col w-full flex-1 items-center"
       data-testid={ChatboxTestIds.Container}
     >
       {currentChat !== undefined && (
@@ -45,7 +45,10 @@ const Chatbox = () => {
             )}
             <div ref={messagesContainerRef}></div>
             {currentChat.fetchError !== undefined && (
-              <RegenerateResponse setInputMessages={setInputMessages} />
+              <RegenerateResponse
+                setInputMessages={setInputMessages}
+                currentChat={currentChat}
+              />
             )}
           </div>
           <ChatInput setInputMessages={setInputMessages} />

@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown'
 
 export enum MessageTestIds {
   Container = 'message-container',
+  MessageWrapper = 'message-wrapper',
 }
 
 export interface MessageProps {
@@ -19,6 +20,7 @@ const Message = ({ message }: MessageProps) => {
       className="relative w-full even:bg-slate-800 odd:bg-slate-900"
     >
       <div
+        data-testid={MessageTestIds.MessageWrapper}
         className={`flex px-4 py-6 w-full md:max-w-[90ch] my-0 mx-auto relative ${
           message.ignored ? 'opacity-50' : ''
         }`}
