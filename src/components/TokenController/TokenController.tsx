@@ -1,16 +1,7 @@
-import { type Message } from '@models/chat.model'
+import { type Chat, type Message } from '@models/chat.model'
 import { ignoreNextTailMessage } from '@redux/chats/chatsActions'
-import { selectCurrentChat } from '@redux/chats/chatsSlice'
-import { useAppDispatch, useAppSelector } from '@redux/hooks'
+import { useAppDispatch } from '@redux/hooks'
 import { useEffect, useMemo, useState } from 'react'
-
-export interface TokenControllerProps {
-  inputTokens: number
-}
-
-export enum TokenControllerTestIds {
-  TotalTokens = 'token-controller-total-tokens',
-}
 
 const calculateChatTokens = (messages: Message[]) => {
   return messages
@@ -18,22 +9,35 @@ const calculateChatTokens = (messages: Message[]) => {
     .reduce((acc, message) => acc + message.tokens, 0)
 }
 
-const TokenController = ({ inputTokens }: TokenControllerProps) => {
+export enum TokenControllerTestIds {
+  TotalTokens = 'token-controller-total-tokens',
+}
+export interface TokenControllerProps {
+  inputTokens: number
+  currentChat: Chat
+}
+
+const TokenController = ({
+  inputTokens,
+  currentChat,
+}: TokenControllerProps) => {
   const MAX_PROMPT_TOKENS = 4096
+
+  const { id: chatId, messages, incomingMessage } = currentChat
 
   const dispatch = useAppDispatch()
 
-  const currentChat = useAppSelector(selectCurrentChat)
   const [colourClass, setColourClass] = useState('text-green-500')
 
-  const currentChatIncomingMessageTokens =
-    currentChat?.incomingMessage?.tokens ?? 0
+  const incomingMessageTokens = incomingMessage?.tokens ?? 0
 
-  const currentChatTokens = useMemo(() => {
-    return calculateChatTokens(currentChat?.messages ?? [])
-  }, [currentChat?.messages])
+  const chatMessagesTokens = useMemo(() => {
+    return calculateChatTokens(currentChat.messages)
+  }, [messages])
 
-  const totalTokens = currentChatIncomingMessageTokens + currentChatTokens
+  const totalTokens = useMemo(() => {
+    return chatMessagesTokens + incomingMessageTokens
+  }, [chatMessagesTokens, incomingMessageTokens])
 
   const getColourClass = () => {
     const maxTokens = MAX_PROMPT_TOKENS
@@ -47,8 +51,8 @@ const TokenController = ({ inputTokens }: TokenControllerProps) => {
 
   useEffect(() => {
     setColourClass(getColourClass())
-    if (totalTokens >= MAX_PROMPT_TOKENS && currentChat !== undefined) {
-      dispatch(ignoreNextTailMessage(currentChat.id))
+    if (totalTokens >= MAX_PROMPT_TOKENS) {
+      dispatch(ignoreNextTailMessage(chatId))
     }
   }, [totalTokens])
 
