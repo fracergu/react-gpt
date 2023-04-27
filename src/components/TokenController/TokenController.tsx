@@ -1,7 +1,7 @@
 import { type Chat, type Message } from '@models/chat.model'
 import { ignoreNextTailMessage } from '@redux/chats/chatsActions'
 import { useAppDispatch } from '@redux/hooks'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const calculateChatTokens = (messages: Message[]) => {
   return messages
@@ -39,7 +39,7 @@ const TokenController = ({
     return chatMessagesTokens + incomingMessageTokens
   }, [chatMessagesTokens, incomingMessageTokens])
 
-  const getColourClass = () => {
+  const getColourClass = useCallback(() => {
     const maxTokens = MAX_PROMPT_TOKENS
     const percent = Math.min(totalTokens / maxTokens, 1)
 
@@ -47,7 +47,7 @@ const TokenController = ({
     if (percent > 0.75) return 'text-orange-500'
     if (percent > 0.5) return 'text-yellow-500'
     return 'text-green-500'
-  }
+  }, [totalTokens])
 
   useEffect(() => {
     setColourClass(getColourClass())
