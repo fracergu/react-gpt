@@ -6,3 +6,10 @@ export const setSidebarOpen = (isOpen: boolean) => (dispatch: Dispatch) => {
     payload: isOpen,
   })
 }
+
+export const setApiKey = (apiKey: string) => (dispatch: Dispatch) => {
+  dispatch({
+    type: 'ui/setApiKey',
+    payload: apiKey,
+  })
+}

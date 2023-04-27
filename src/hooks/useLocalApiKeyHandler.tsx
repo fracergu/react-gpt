@@ -1,18 +1,13 @@
 import { useAppDispatch } from '@redux/hooks'
+import { setApiKey as setApiKeyAction } from '@redux/ui/uiActions'
 import { useEffect, useState } from 'react'
 
 export const useLocalApiKeyHandler = () => {
   const dispatch = useAppDispatch()
 
-  const getApiKeyFromLocalStorage = () => {
-    const ui = localStorage.getItem('ui')
-    if (ui === null) return null
-    const parsedUi = JSON.parse(ui)
-    return parsedUi.apiKey
-  }
-
   const envApiKey = import.meta.env.VITE_OPENAI_API_KEY
-  const localApiKey = getApiKeyFromLocalStorage()
+  const localApiKey =
+    JSON.parse(localStorage.getItem('ui') ?? '{}')?.apiKey ?? null
 
   const [apiKey, setApiKey] = useState<string | null>(
     localApiKey ?? envApiKey ?? null,
@@ -20,10 +15,7 @@ export const useLocalApiKeyHandler = () => {
 
   useEffect(() => {
     if (apiKey === null || envApiKey === null) return
-    dispatch({
-      type: 'ui/setApiKey',
-      payload: apiKey,
-    })
+    dispatch(setApiKeyAction(apiKey))
   }, [apiKey])
 
   return {
