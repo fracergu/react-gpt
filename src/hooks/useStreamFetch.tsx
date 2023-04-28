@@ -5,7 +5,10 @@ import {
   type APIResponseError,
   NoBodyError,
 } from '@models/errors.model'
-import { updateChatFetchError } from '@redux/chats/chats.actions'
+import {
+  updateChatFetchError,
+  updateFetchStatus,
+} from '@redux/chats/chats.actions'
 import { type useAppDispatch } from '@redux/hooks'
 import { prepareMessagesForAPI, readStreamResponse } from '@utils/fetch.utils'
 
@@ -21,7 +24,7 @@ export const useStreamFetch = (
   const abortController = new AbortController()
 
   const fetchData = async () => {
-    dispatch({ type: 'chats/updateFetchStatus', payload: FetchStatus.LOADING })
+    dispatch(updateFetchStatus(FetchStatus.LOADING))
 
     try {
       const response = await fetch(API_URL, {
