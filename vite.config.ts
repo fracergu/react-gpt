@@ -13,7 +13,15 @@ export default defineConfig({
     setupFiles: ['src/setupTests.ts'],
     coverage: {
       provider: 'c8',
-      exclude: ['src/**/*.test.tsx', 'src/models', 'src/enums', 'src/utils'],
+      exclude: [
+        'src/**/*.test.tsx',
+        'src/models',
+        'src/enums',
+        'src/utils',
+        'src/**/*.mock.ts',
+        'src/redux/hooks.ts',
+        'src/redux/store.ts',
+      ],
     },
   },
 })
