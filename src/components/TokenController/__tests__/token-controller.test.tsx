@@ -1,7 +1,7 @@
 import { type Chat, Role } from '@models/chat.model'
 import { MOCK_STATE } from '@redux/mocks/state.mock'
 import { screen, cleanup } from '@testing-library/react'
-import { renderWithProviders } from 'src/utils/test-utils'
+import { renderWithProviders } from '@utils/test.utils'
 import { vi } from 'vitest'
 
 import TokenController, { TokenControllerTestIds } from '../TokenController'

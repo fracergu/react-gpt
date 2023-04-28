@@ -1,8 +1,8 @@
 import { ApiKeyPromptTestIds } from '@components/ApiKeyPrompt/ApiKeyPrompt'
 import { SidenavTestIds } from '@components/Sidenav/Sidenav'
 import * as hooks from '@hooks/useLocalApiKeyHandler'
+import { renderWithProviders } from '@utils/test.utils'
 import App from 'src/App'
-import { renderWithProviders } from 'src/utils/test-utils'
 import { vi } from 'vitest'
 
 describe('App', () => {

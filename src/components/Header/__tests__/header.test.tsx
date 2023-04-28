@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react'
-import { renderWithProviders } from 'src/utils/test-utils'
+import { renderWithProviders } from '@utils/test.utils'
 import Swal from 'sweetalert2'
 import { vi } from 'vitest'
 

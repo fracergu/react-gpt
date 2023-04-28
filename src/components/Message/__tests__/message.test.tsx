@@ -1,7 +1,7 @@
 import { CodeBlockTestIds } from '@components/CodeBlock/CodeBlock'
 import { Role, type Message as MessageModel } from '@models/chat.model'
 import { render, screen } from '@testing-library/react'
-import { getTokenAmount } from 'src/utils/tokens-utils'
+import { getTokenAmount } from '@utils/token.utils'
 
 import Message, { MessageTestIds } from '../Message'
 

@@ -6,8 +6,8 @@ import { type Message, Role } from '@models/chat.model'
 import { addMessage } from '@redux/chats/chatsActions'
 import { selectCurrentChat, selectFetchStatus } from '@redux/chats/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
+import { getTokenAmount } from '@utils/token.utils'
 import { useCallback, useState } from 'react'
-import { getTokenAmount } from 'src/utils/tokens-utils'
 import { v4 as uuid } from 'uuid'
 
 interface chatInputProps {

@@ -1,7 +1,7 @@
 import { MOCK_STATE } from '@redux/mocks/state.mock'
 import { type RootState } from '@redux/store'
 import { fireEvent, screen } from '@testing-library/react'
-import { renderWithProviders } from 'src/utils/test-utils'
+import { renderWithProviders } from '@utils/test.utils'
 import { vi } from 'vitest'
 
 import RegenerateResponse, {

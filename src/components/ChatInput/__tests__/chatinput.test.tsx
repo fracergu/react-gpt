@@ -2,7 +2,7 @@ import { LoaderTestIds } from '@components/Loader/Loader'
 import { FetchStatus } from '@enums/fetchStatus.enum'
 import { MOCK_STATE } from '@redux/mocks/state.mock'
 import { screen, fireEvent } from '@testing-library/react'
-import { renderWithProviders } from 'src/utils/test-utils'
+import { renderWithProviders } from '@utils/test.utils'
 import { vi } from 'vitest'
 
 import ChatInput from '../ChatInput'

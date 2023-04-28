@@ -1,27 +1,24 @@
 import ChatInput from '@components/ChatInput/ChatInput'
 import Message from '@components/Message/Message'
 import { useStreamCompletion } from '@hooks/useStreamCompletion'
-import { type Chat, type Message as MessageModel } from '@models/chat.model'
-import { selectCurrentChat } from '@redux/chats/chatsSlice'
-import { useAppSelector } from '@redux/hooks'
+import { type Chat } from '@models/chat.model'
 import { useEffect, useRef } from 'react'
 
 import RegenerateResponse from '../RegenerateResponse/RegenerateResponse'
 
 export interface ChatboxProps {
-  messages: MessageModel[]
+  currentChat: Chat
 }
 
 export enum ChatboxTestIds {
   Container = 'chatbox-container',
 }
 
-const Chatbox = () => {
-  const currentChat: Chat | undefined = useAppSelector(selectCurrentChat)
+const Chatbox = ({ currentChat }: ChatboxProps) => {
   const chatIncomingMessage = currentChat?.incomingMessage
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
-  const { setInputMessages } = useStreamCompletion()
+  const { setInputMessages } = useStreamCompletion(currentChat.id)
 
   useEffect(() => {
     if (currentChat != null) {
