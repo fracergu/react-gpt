@@ -5,7 +5,7 @@ import {
   type APIResponseError,
   NoBodyError,
 } from '@models/errors.model'
-import { updateChatFetchError } from '@redux/chats/chatsActions'
+import { updateChatFetchError } from '@redux/chats/chats.actions'
 import { type useAppDispatch } from '@redux/hooks'
 import { prepareMessagesForAPI, readStreamResponse } from '@utils/fetch.utils'
 

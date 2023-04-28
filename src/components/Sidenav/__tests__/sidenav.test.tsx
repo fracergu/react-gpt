@@ -18,8 +18,8 @@ const mockChats = {
   'chat-2': { createdAt: '2023-03-25T12:01:00' },
 }
 
-vi.mock('@redux/chats/chatsSlice', async () => {
-  const actual: any = await vi.importActual('@redux/chats/chatsSlice')
+vi.mock('@redux/chats/chats.slice', async () => {
+  const actual: any = await vi.importActual('@redux/chats/chats.slice')
   return {
     ...actual,
     selectChats: () => mockChats,
@@ -28,8 +28,8 @@ vi.mock('@redux/chats/chatsSlice', async () => {
   }
 })
 
-vi.mock('@redux/ui/uiSlice', async () => {
-  const actual: any = await vi.importActual('@redux/ui/uiSlice')
+vi.mock('@redux/ui/ui.slice', async () => {
+  const actual: any = await vi.importActual('@redux/ui/ui.slice')
   return {
     ...actual,
     selectSidebarOpen: () => true,
@@ -41,8 +41,8 @@ const mockLoadChat = vi.fn()
 const mockDeleteChat = vi.fn()
 const mockSetSidebarOpen = vi.fn()
 
-vi.mock('@redux/chats/chatsActions', async () => {
-  const actual: any = await vi.importActual('@redux/chats/chatsActions')
+vi.mock('@redux/chats/chats.actions', async () => {
+  const actual: any = await vi.importActual('@redux/chats/chats.actions')
   return {
     ...actual,
     createChat: () => mockCreateChat,
@@ -51,8 +51,8 @@ vi.mock('@redux/chats/chatsActions', async () => {
   }
 })
 
-vi.mock('@redux/ui/uiActions', async () => {
-  const actual: any = await vi.importActual('@redux/ui/uiActions')
+vi.mock('@redux/ui/ui.actions', async () => {
+  const actual: any = await vi.importActual('@redux/ui/ui.actions')
   return {
     ...actual,
     setSidebarOpen: () => mockSetSidebarOpen,

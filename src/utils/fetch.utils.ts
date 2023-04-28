@@ -4,7 +4,7 @@ import {
   addMessage,
   updateChatIncomingMessage,
   updateFetchStatus,
-} from '@redux/chats/chatsActions'
+} from '@redux/chats/chats.actions'
 import { type useAppDispatch } from '@redux/hooks'
 import { getTokenAmount } from '@utils/token.utils'
 import { v4 as uuid } from 'uuid'

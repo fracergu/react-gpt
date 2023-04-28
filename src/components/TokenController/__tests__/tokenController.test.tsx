@@ -13,8 +13,8 @@ vi.mock('@redux/hooks', () => ({
 }))
 
 const ignoreNextTailMessageMock = vi.fn()
-vi.mock('@redux/chats/chatsActions', async () => {
-  const actual = await import('@redux/chats/chatsActions')
+vi.mock('@redux/chats/chats.actions', async () => {
+  const actual = await import('@redux/chats/chats.actions')
   return {
     ...actual,
     ignoreNextTailMessage: () => ignoreNextTailMessageMock,

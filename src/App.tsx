@@ -3,7 +3,7 @@ import Chatbox from '@components/Chatbox/Chatbox'
 import Header from '@components/Header/Header'
 import Sidenav from '@components/Sidenav/Sidenav'
 import { useLocalApiKeyHandler } from '@hooks/useLocalApiKeyHandler'
-import { selectCurrentChat } from '@redux/chats/chatsSlice'
+import { selectCurrentChat } from '@redux/chats/chats.slice'
 import { useAppSelector } from '@redux/hooks'
 
 function App() {

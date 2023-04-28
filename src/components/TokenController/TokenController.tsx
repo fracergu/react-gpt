@@ -1,5 +1,5 @@
 import { type Chat, type Message } from '@models/chat.model'
-import { ignoreNextTailMessage } from '@redux/chats/chatsActions'
+import { ignoreNextTailMessage } from '@redux/chats/chats.actions'
 import { useAppDispatch } from '@redux/hooks'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 

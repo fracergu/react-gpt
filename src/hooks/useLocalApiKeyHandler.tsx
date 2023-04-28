@@ -1,5 +1,5 @@
 import { useAppDispatch } from '@redux/hooks'
-import { setApiKey as setApiKeyAction } from '@redux/ui/uiActions'
+import { setApiKey as setApiKeyAction } from '@redux/ui/ui.actions'
 import { useEffect, useState } from 'react'
 
 export const useLocalApiKeyHandler = () => {

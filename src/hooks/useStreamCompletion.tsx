@@ -1,6 +1,6 @@
 import { type Message } from '@models/chat.model'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { selectApiKey } from '@redux/ui/uiSlice'
+import { selectApiKey } from '@redux/ui/ui.slice'
 import { useEffect, useState } from 'react'
 
 import { useStreamFetch } from './useStreamFetch'

@@ -10,7 +10,7 @@ vi.mock('@redux/hooks', () => ({
 
 const setApiKeyActionMock = vi.fn()
 
-vi.mock('@redux/ui/uiActions', () => ({
+vi.mock('@redux/ui/ui.actions', () => ({
   setApiKey: (apiKey: string) => setApiKeyActionMock(apiKey),
 }))
 

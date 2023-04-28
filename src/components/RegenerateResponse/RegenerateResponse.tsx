@@ -4,7 +4,7 @@ import {
   updateChatFetchError,
   updateChatIncomingMessage,
   updateFetchStatus,
-} from '@redux/chats/chatsActions'
+} from '@redux/chats/chats.actions'
 import { useAppDispatch } from '@redux/hooks'
 
 export enum RegenerateResponseTestIds {
