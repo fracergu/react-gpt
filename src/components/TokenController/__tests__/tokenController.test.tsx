@@ -1,4 +1,4 @@
-import { type Chat, Role } from '@models/chat.model'
+import { type Chat, Role, type Message } from '@models/chat.model'
 import { MOCK_STATE } from '@redux/mocks/state.mock'
 import { screen, cleanup } from '@testing-library/react'
 import { renderWithProviders } from '@utils/test.utils'
@@ -22,7 +22,11 @@ vi.mock('@redux/chats/chats.actions', async () => {
 })
 
 describe('TokenController', () => {
-  const renderTokenController = (inputTokens: number, totalTokens: number) => {
+  const renderTokenController = (
+    inputTokens: number,
+    totalTokens: number,
+    incomingMessage?: Message,
+  ) => {
     const currentChatMock: Chat = {
       ...MOCK_STATE.chats.chats['1'],
       messages: [
@@ -34,6 +38,7 @@ describe('TokenController', () => {
           ignored: false,
         },
       ],
+      incomingMessage,
     }
 
     return renderWithProviders(
@@ -87,5 +92,22 @@ describe('TokenController', () => {
   it('should dispatch ignoreNextTailMessage when the total tokens is greater than or equal to 4096', () => {
     renderTokenController(0, 4096)
     expect(dispatchMock).toHaveBeenCalledWith(ignoreNextTailMessageMock)
+  })
+
+  it('should correctly calculate incomingMessageTokens when incomingMessage is not null', () => {
+    const inputTokens = 10
+    const chatTokens = 5
+    const incomingMessageTokens = 5
+    renderTokenController(inputTokens, chatTokens, {
+      id: '2',
+      role: Role.USER,
+      content: 'test incoming message',
+      tokens: incomingMessageTokens,
+      ignored: false,
+    })
+    const totalTokens = screen.getByTestId(TokenControllerTestIds.TotalTokens)
+    expect(totalTokens.textContent).toBe(
+      (chatTokens + incomingMessageTokens).toString(),
+    )
   })
 })

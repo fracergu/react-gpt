@@ -9,7 +9,6 @@ export const useStreamCompletion = (currentChatId: string) => {
     import.meta.env.VITE_OPENAI_API_KEY ??
     useAppSelector(selectApiKey) ??
     undefined
-  console.log(apiKey)
   const dispatch = useAppDispatch()
   const [inputMessages, setInputMessages] = useState<Message[]>([])
   const { fetchData, abortController } = useStreamFetch(
