@@ -14,7 +14,7 @@ export default defineConfig({
     coverage: {
       provider: 'c8',
       exclude: [
-        'src/**/*.test.tsx',
+        'src/**/*.test.*',
         'src/models',
         'src/enums',
         'src/utils',
