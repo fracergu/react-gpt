@@ -29,7 +29,7 @@ const Header = () => {
   return (
     <nav
       data-testid={HeaderTestIds.Container}
-      className="p-4 md:p-6 flex items-center justify-between font-open-sans bg-slate-800"
+      className="p-4 md:p-6 flex items-center justify-between font-open-sans bg-slate-800 border-b border-slate-700"
     >
       <button
         className="w-6 h-6 md:w-8 md:h-8 md:hidden"

@@ -1,10 +1,10 @@
 import { screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import { renderWithProviders } from 'src/utils/test-utils'
+import { renderWithProviders } from '@utils/test.utils'
 import Swal from 'sweetalert2'
 import { vi } from 'vitest'
 
-import Sidenav from '../Sidenav'
+import Sidenav, { SidenavTestIds } from '../Sidenav'
 
 const appDispatchMock = vi.fn()
 
@@ -18,8 +18,8 @@ const mockChats = {
   'chat-2': { createdAt: '2023-03-25T12:01:00' },
 }
 
-vi.mock('@redux/chats/chatsSlice', async () => {
-  const actual: any = await vi.importActual('@redux/chats/chatsSlice')
+vi.mock('@redux/chats/chats.slice', async () => {
+  const actual: any = await vi.importActual('@redux/chats/chats.slice')
   return {
     ...actual,
     selectChats: () => mockChats,
@@ -28,8 +28,8 @@ vi.mock('@redux/chats/chatsSlice', async () => {
   }
 })
 
-vi.mock('@redux/ui/uiSlice', async () => {
-  const actual: any = await vi.importActual('@redux/ui/uiSlice')
+vi.mock('@redux/ui/ui.slice', async () => {
+  const actual: any = await vi.importActual('@redux/ui/ui.slice')
   return {
     ...actual,
     selectSidebarOpen: () => true,
@@ -38,13 +38,24 @@ vi.mock('@redux/ui/uiSlice', async () => {
 
 const mockCreateChat = vi.fn()
 const mockLoadChat = vi.fn()
+const mockDeleteChat = vi.fn()
+const mockSetSidebarOpen = vi.fn()
 
-vi.mock('@redux/chats/chatsActions', async () => {
-  const actual: any = await vi.importActual('@redux/chats/chatsActions')
+vi.mock('@redux/chats/chats.actions', async () => {
+  const actual: any = await vi.importActual('@redux/chats/chats.actions')
   return {
     ...actual,
     createChat: () => mockCreateChat,
     loadChat: () => mockLoadChat,
+    deleteChat: () => mockDeleteChat,
+  }
+})
+
+vi.mock('@redux/ui/ui.actions', async () => {
+  const actual: any = await vi.importActual('@redux/ui/ui.actions')
+  return {
+    ...actual,
+    setSidebarOpen: () => mockSetSidebarOpen,
   }
 })
 
@@ -123,5 +134,38 @@ describe('Sidenav', () => {
       expect(spyWindowReload).toHaveBeenCalledTimes(1)
     })
     swalFireSpy.mockRestore()
+  })
+
+  it('opens delete chat dialog on chat item delete button click', async () => {
+    const spy = vi.spyOn(Swal, 'fire')
+    const deleteChatButton = await screen.findAllByRole('button', {
+      name: 'delete chat',
+    })
+    fireEvent.click(deleteChatButton[0])
+    expect(spy).toHaveBeenCalledTimes(1)
+  })
+
+  it('invokes dispatch with deleteChat action on delete chat dialog confirm', async () => {
+    const spy = vi.spyOn(Swal, 'fire').mockResolvedValue({
+      isConfirmed: true,
+      isDenied: false,
+      isDismissed: false,
+    })
+    const deleteChatButton = await screen.findAllByRole('button', {
+      name: 'delete chat',
+    })
+    fireEvent.click(deleteChatButton[0])
+    await waitFor(() => {
+      expect(appDispatchMock).toHaveBeenCalledTimes(1)
+      expect(appDispatchMock).toHaveBeenCalledWith(mockDeleteChat)
+    })
+    spy.mockRestore()
+  })
+
+  it('backdrop click should dispatch closeSidebar action', () => {
+    const backdrop = screen.getByTestId(SidenavTestIds.Backdrop)
+    fireEvent.click(backdrop)
+    expect(appDispatchMock).toHaveBeenCalledTimes(1)
+    expect(appDispatchMock).toHaveBeenCalledWith(mockSetSidebarOpen)
   })
 })

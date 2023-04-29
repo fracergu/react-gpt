@@ -11,5 +11,17 @@ export default defineConfig({
     globals: true,
     environment: 'happy-dom',
     setupFiles: ['src/setupTests.ts'],
+    coverage: {
+      provider: 'c8',
+      exclude: [
+        'src/**/*.test.*',
+        'src/models',
+        'src/enums',
+        'src/utils',
+        'src/**/*.mock.ts',
+        'src/redux/hooks.ts',
+        'src/redux/store.ts',
+      ],
+    },
   },
 })

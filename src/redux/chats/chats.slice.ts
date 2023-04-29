@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid'
 
 const chatsFromLocalStorage = JSON.parse(localStorage.getItem('chats') ?? '{}')
 
-interface ChatsState {
+export interface ChatsState {
   currentChatId?: string
   chats: Chats
   fetchStatus: FetchStatus

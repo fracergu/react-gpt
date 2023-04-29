@@ -3,11 +3,11 @@ import Loader from '@components/Loader/Loader'
 import TokenController from '@components/TokenController/TokenController'
 import { FetchStatus } from '@enums/fetchStatus.enum'
 import { type Message, Role } from '@models/chat.model'
-import { addMessage } from '@redux/chats/chatsActions'
-import { selectCurrentChat, selectFetchStatus } from '@redux/chats/chatsSlice'
+import { addMessage } from '@redux/chats/chats.actions'
+import { selectCurrentChat, selectFetchStatus } from '@redux/chats/chats.slice'
 import { useAppDispatch, useAppSelector } from '@redux/hooks'
+import { getTokenAmount } from '@utils/token.utils'
 import { useCallback, useState } from 'react'
-import { getTokenAmount } from 'src/utils/tokens-utils'
 import { v4 as uuid } from 'uuid'
 
 interface chatInputProps {
@@ -41,7 +41,7 @@ const ChatInput = ({ setInputMessages }: chatInputProps) => {
   }
 
   const handleSendMessage = useCallback(() => {
-    if (textareaValue.length === 0 || currentChat == null) return
+    if (textareaValue.length === 0 || currentChat === undefined) return
     const newMessage = {
       id: uuid(),
       role: Role.USER,
@@ -57,32 +57,39 @@ const ChatInput = ({ setInputMessages }: chatInputProps) => {
   }, [currentChat, textareaValue, setInputMessages, dispatch])
 
   return (
-    <div className="relative mt-auto flex px-4 pb-6 w-full justify-center bg-slate-800 border-t border-slate-700">
-      <div className="w-full max-w-[90ch]">
-        <div className="py-3 md:pr-[60px]">
-          <TokenController inputTokens={currentInputTokens} />
-        </div>
-        <div className="flex gap-4 w-full max-w-[90ch]">
-          <div className="flex flex-col w-full">
-            <textarea
-              id="messageInput"
-              className="resize-none w-full focus:outline-none p-2 bg-slate-700 text-gray-100 rounded-md"
-              placeholder="Type your message here..."
-              value={textareaValue}
-              onChange={handleTextareaChange}
-              onKeyDown={handleTextareaKeyDown}
-              disabled={fetchStatus === FetchStatus.LOADING}
-            />
+    <>
+      {currentChat !== undefined && (
+        <div className="relative mt-auto flex px-4 pb-6 w-full justify-center bg-slate-800 border-t border-slate-700">
+          <div className="w-full max-w-[90ch]">
+            <div className="py-3 md:pr-[60px]">
+              <TokenController
+                inputTokens={currentInputTokens}
+                currentChat={currentChat}
+              />
+            </div>
+            <div className="flex gap-4 w-full max-w-[90ch]">
+              <div className="flex flex-col w-full">
+                <textarea
+                  id="messageInput"
+                  className="resize-none w-full focus:outline-none p-2 bg-slate-700 text-gray-100 rounded-md"
+                  placeholder="Type your message here..."
+                  value={textareaValue}
+                  onChange={handleTextareaChange}
+                  onKeyDown={handleTextareaKeyDown}
+                  disabled={fetchStatus === FetchStatus.LOADING}
+                />
+              </div>
+              {fetchStatus === FetchStatus.LOADING && <Loader />}
+              {fetchStatus !== FetchStatus.LOADING && (
+                <button className="p-1" onClick={handleSendMessage}>
+                  <img className="w-10 h-10" src={sendIcon} alt="send" />
+                </button>
+              )}
+            </div>
           </div>
-          {fetchStatus === FetchStatus.LOADING && <Loader />}
-          {fetchStatus !== FetchStatus.LOADING && (
-            <button className="p-1" onClick={handleSendMessage}>
-              <img className="w-10 h-10" src={sendIcon} alt="send" />
-            </button>
-          )}
         </div>
-      </div>
-    </div>
+      )}
+    </>
   )
 }
 

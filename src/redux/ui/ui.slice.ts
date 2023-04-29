@@ -1,6 +1,6 @@
 import { type RootState } from '@redux/store'
 import { createSlice } from '@reduxjs/toolkit'
-interface UiState {
+export interface UiState {
   sidebarOpen: boolean
   apiKey?: string
 }

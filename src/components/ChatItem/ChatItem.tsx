@@ -52,6 +52,7 @@ const ChatItem = ({
         </button>
         <div className="flex w-fit mr-3">
           <button
+            name="delete-chat"
             onClick={() => {
               void confirmDeletion(chatId)
             }}

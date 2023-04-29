@@ -1,37 +1,32 @@
 import ChatInput from '@components/ChatInput/ChatInput'
 import Message from '@components/Message/Message'
 import { useStreamCompletion } from '@hooks/useStreamCompletion'
-import { type Chat, type Message as MessageModel } from '@models/chat.model'
-import { selectCurrentChat } from '@redux/chats/chatsSlice'
-import { useAppSelector } from '@redux/hooks'
+import { type Chat } from '@models/chat.model'
 import { useEffect, useRef } from 'react'
 
 import RegenerateResponse from '../RegenerateResponse/RegenerateResponse'
 
 export interface ChatboxProps {
-  messages: MessageModel[]
+  currentChat: Chat
 }
 
 export enum ChatboxTestIds {
   Container = 'chatbox-container',
 }
 
-const Chatbox = () => {
-  const currentChat: Chat | undefined = useAppSelector(selectCurrentChat)
+const Chatbox = ({ currentChat }: ChatboxProps) => {
   const chatIncomingMessage = currentChat?.incomingMessage
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
-  const { setInputMessages } = useStreamCompletion()
+  const { setInputMessages } = useStreamCompletion(currentChat.id)
 
   useEffect(() => {
-    if (currentChat != null) {
-      messagesContainerRef.current?.scrollIntoView()
-    }
-  }, [currentChat?.messages, chatIncomingMessage, currentChat?.fetchError])
+    messagesContainerRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [currentChat.messages, chatIncomingMessage, currentChat.fetchError])
 
   return (
     <div
-      className="flex flex-col w-full flex-1 items-center border-l border-t border-slate-700"
+      className="flex flex-col w-full flex-1 items-center"
       data-testid={ChatboxTestIds.Container}
     >
       {currentChat !== undefined && (
@@ -45,7 +40,10 @@ const Chatbox = () => {
             )}
             <div ref={messagesContainerRef}></div>
             {currentChat.fetchError !== undefined && (
-              <RegenerateResponse setInputMessages={setInputMessages} />
+              <RegenerateResponse
+                setInputMessages={setInputMessages}
+                currentChat={currentChat}
+              />
             )}
           </div>
           <ChatInput setInputMessages={setInputMessages} />

@@ -1,5 +1,5 @@
-import chatsReducer from '@redux/chats/chatsSlice'
-import uiReducer from '@redux/ui/uiSlice'
+import chatsReducer from '@redux/chats/chats.slice'
+import uiReducer from '@redux/ui/ui.slice'
 import {
   type PreloadedState,
   combineReducers,

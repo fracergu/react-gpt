@@ -1,7 +1,7 @@
 import { MOCK_STATE } from '@redux/mocks/state.mock'
 import { type RootState } from '@redux/store'
 import { fireEvent, screen } from '@testing-library/react'
-import { renderWithProviders } from 'src/utils/test-utils'
+import { renderWithProviders } from '@utils/test.utils'
 import { vi } from 'vitest'
 
 import RegenerateResponse, {
@@ -11,13 +11,18 @@ import RegenerateResponse, {
 describe('RegenerateResponse', () => {
   const setInputMessagesMock = vi.fn()
 
+  const currentChatMock = MOCK_STATE.chats.chats['1']
+
   beforeEach(() => {
     setInputMessagesMock.mockClear()
   })
 
   it('renders the regenerate response container', () => {
     renderWithProviders(
-      <RegenerateResponse setInputMessages={setInputMessagesMock} />,
+      <RegenerateResponse
+        setInputMessages={setInputMessagesMock}
+        currentChat={currentChatMock}
+      />,
     )
     expect(
       screen.getByTestId(RegenerateResponseTestIds.Container),
@@ -26,12 +31,20 @@ describe('RegenerateResponse', () => {
 
   it('displays the error message', () => {
     renderWithProviders(
-      <RegenerateResponse setInputMessages={setInputMessagesMock} />,
+      <RegenerateResponse
+        setInputMessages={setInputMessagesMock}
+        currentChat={currentChatMock}
+      />,
     )
     expect(screen.getByText(/Something went wrong/)).toBeInTheDocument()
   })
 
   it('renders the regenerate response button and triggers setInputMessages', () => {
+    const currentChatWithErrorMock = {
+      ...currentChatMock,
+      fetchError: 'Error',
+    }
+
     const preloadedState: RootState = {
       ...MOCK_STATE,
       chats: {
@@ -47,7 +60,10 @@ describe('RegenerateResponse', () => {
     }
 
     renderWithProviders(
-      <RegenerateResponse setInputMessages={setInputMessagesMock} />,
+      <RegenerateResponse
+        setInputMessages={setInputMessagesMock}
+        currentChat={currentChatWithErrorMock}
+      />,
       { preloadedState },
     )
     const regenerateButton = screen.getByText(/Regenerate response/)
